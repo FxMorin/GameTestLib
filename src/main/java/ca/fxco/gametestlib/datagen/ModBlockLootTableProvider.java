@@ -21,6 +21,7 @@ public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(GameTestBlocks.CHECK_STATE_BLOCK);
         dropSelf(GameTestBlocks.TEST_TRIGGER_BLOCK);
         dropSelf(GameTestBlocks.GAMETEST_REDSTONE_BLOCK);
+        dropSelf(GameTestBlocks.ENTITY_INTERACTION_BLOCK);
 
         LOGGER.info("Finished generating block loot tables!");
     }

@@ -1,9 +1,6 @@
 package ca.fxco.gametestlib.base;
 
-import ca.fxco.gametestlib.blocks.CheckStateBlock;
-import ca.fxco.gametestlib.blocks.GameTestPoweredBlock;
-import ca.fxco.gametestlib.blocks.PulseStateBlock;
-import ca.fxco.gametestlib.blocks.TestTriggerBlock;
+import ca.fxco.gametestlib.blocks.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,6 +27,10 @@ public class GameTestBlocks {
     public static final GameTestPoweredBlock GAMETEST_REDSTONE_BLOCK = register(
             "gametest_redstone_block",
             new GameTestPoweredBlock(FabricBlockSettings.copyOf(Blocks.REDSTONE_BLOCK))
+    );
+    public static final EntityInteractionBlock ENTITY_INTERACTION_BLOCK = register(
+            "entity_interaction_block",
+            new EntityInteractionBlock(FabricBlockSettings.copyOf(Blocks.STONE))
     );
 
     private static <T extends Block> T register(String name, T block) {

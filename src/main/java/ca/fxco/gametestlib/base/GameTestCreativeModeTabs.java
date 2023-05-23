@@ -14,8 +14,8 @@ public class GameTestCreativeModeTabs {
                 output.accept(GameTestItems.GAMETEST_REDSTONE_BLOCK);
                 output.accept(GameTestItems.TEST_TRIGGER_BLOCK);
                 output.accept(GameTestItems.PULSE_STATE_BLOCK);
-
                 output.accept(GameTestItems.CHECK_STATE_BLOCK);
+                output.accept(GameTestItems.ENTITY_INTERACTION_BLOCK);
             })
             .build();
 

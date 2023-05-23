@@ -1,7 +1,9 @@
 package ca.fxco.gametestlib.gametest;
 
 import ca.fxco.gametestlib.base.GameTestBlocks;
+import ca.fxco.gametestlib.base.GameTestProperties;
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
+import ca.fxco.gametestlib.blocks.EntityInteractionBlock;
 import ca.fxco.gametestlib.blocks.PulseStateBlockEntity;
 import ca.fxco.gametestlib.gametest.expansion.Config;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
@@ -62,6 +64,9 @@ public class GameTestUtil {
                 groupConditions.addTestTrigger(blockPos, changes.isFlipTriggers());
             } else if (block == GameTestBlocks.GAMETEST_REDSTONE_BLOCK) {
                 helper.setBlock(blockPos, state.cycle(BlockStateProperties.POWERED));
+            } else if (block == GameTestBlocks.ENTITY_INTERACTION_BLOCK) {
+                groupConditions.addEntityInteraction(blockPos, state.getValue(GameTestProperties.INTERACTION_TYPE), changes.isFlipTriggers());
+                setBlock(helper, blockPos, state.setValue(GameTestProperties.INTERACTION_TYPE, EntityInteractionBlock.InteractionType.NONE), Block.UPDATE_INVISIBLE);
             }
         });
         if (!groupConditions.getTestConditions().isEmpty()) {

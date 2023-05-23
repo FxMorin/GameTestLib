@@ -34,6 +34,8 @@ public class ModModelProvider extends FabricModelProvider {
         registerInvertedBlock(generator, GameTestBlocks.TEST_TRIGGER_BLOCK);
         registerPoweredBlock(generator, GameTestBlocks.GAMETEST_REDSTONE_BLOCK);
 
+        generator.createTrivialCube(GameTestBlocks.ENTITY_INTERACTION_BLOCK); // TODO: Give it a proper model
+
     }
 
     @Override

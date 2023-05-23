@@ -1,7 +1,9 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
 import ca.fxco.gametestlib.base.GameTestBlocks;
+import ca.fxco.gametestlib.base.GameTestProperties;
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
+import ca.fxco.gametestlib.blocks.EntityInteractionBlock;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -55,12 +57,55 @@ public class GameTestGroupConditions {
         testConditions.add(new TriggerTestCondition(blockPos, flip));
     }
 
+    public void addEntityInteraction(BlockPos blockPos, EntityInteractionBlock.InteractionType type, boolean flip) {
+        testConditions.add(new EntityInteractionCondition(blockPos, type, flip));
+    }
+
     public static abstract class TestCondition {
         public abstract boolean isSuccess();
         public abstract void setSuccess(boolean state);
         public abstract boolean isSingleTick();
         public boolean canRunThisTick(long tick) {return false;}
         public abstract Boolean runCheck(GameTestHelper helper);
+    }
+
+    public static class EntityInteractionCondition extends TestCondition {
+
+        @Getter
+        @Setter
+        private boolean success = false;
+        private final BlockPos blockPos;
+        private final boolean flip;
+
+        private final EntityInteractionBlock.InteractionType interactionType;
+
+        public EntityInteractionCondition(BlockPos blockPos, EntityInteractionBlock.InteractionType interactionType,
+                                          boolean flip) {
+            this.blockPos = blockPos.immutable();
+            this.interactionType = interactionType;
+            this.flip = flip;
+        }
+
+        @Override
+        public boolean isSingleTick() {
+            return false;
+        }
+
+        @Override
+        public Boolean runCheck(GameTestHelper helper) {
+            BlockState state = helper.getBlockState(this.blockPos);
+            if (state.getBlock() == GameTestBlocks.ENTITY_INTERACTION_BLOCK) {
+                if (state.getValue(GameTestProperties.INTERACTION_TYPE) == this.interactionType) {
+                    if (state.getValue(BlockStateProperties.INVERTED) == this.flip) {
+                        helper.fail("Test Trigger at " + this.blockPos.toShortString() + " was triggered");
+                        return false;
+                    }
+                    return true;
+                }
+                return null;
+            }
+            return false;
+        }
     }
 
     public static class TriggerTestCondition extends TestCondition {
