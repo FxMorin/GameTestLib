@@ -6,6 +6,7 @@ import ca.fxco.gametestlib.base.GameTestBlocks;
 import ca.fxco.gametestlib.base.GameTestCreativeModeTabs;
 import ca.fxco.gametestlib.base.GameTestItems;
 import ca.fxco.gametestlib.config.ConfigManager;
+import ca.fxco.gametestlib.network.GameTestNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
@@ -28,10 +29,9 @@ public class GameTestLib implements ModInitializer {
         GameTestItems.boostrap();
         GameTestBlockEntities.boostrap();
         GameTestCreativeModeTabs.bootstrap();
+        GameTestNetwork.initialize();
 
-        EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, configBinder -> {
-            CONFIG_MANAGER.loadBinder(configBinder);
-        });
+        EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CURRENT_SERVER = server;
         });
