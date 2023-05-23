@@ -9,6 +9,17 @@ group = project.maven_group
 loom {
     accessWidenerPath = file("src/main/resources/gametestlib.accesswidener")
     runs {
+        datagenClient {
+            client()
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
+            vmArg "-Dfabric-api.datagen.strict-validation"
+
+            ideConfigGenerated = true
+            runDir "build/datagen"
+            source sourceSets.main
+        }
         gametest {
             server()
             name "Game Test"
@@ -46,6 +57,14 @@ dependencies {
 
     // MixinExtras
     include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_Version}")))
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir "src/generated/resources"
+        }
+    }
 }
 
 processResources {

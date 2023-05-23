@@ -7,6 +7,7 @@
 - Client-side block renderers (showing the block it checks, etc...)
 - Proper combination logic
 - Block for testing entities (with renderers)
+- Add a test mod to test GameTestLib (testception)
 
 ## Features
 - Able to join the test server

@@ -17,6 +17,9 @@
     "main": [
       "ca.fxco.gametestlib.GameTestLib"
     ],
+    "fabric-datagen": [
+      "ca.fxco.gametestlib.datagen.GameTestDataGen"
+    ],
     "fabric-gametest": [
       "ca.fxco.gametestlib.gametest.TestGenerator"
     ]
