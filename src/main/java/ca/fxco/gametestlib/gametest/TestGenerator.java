@@ -16,13 +16,16 @@ import lombok.RequiredArgsConstructor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.gametest.framework.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Rotation;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class TestGenerator {
 
@@ -71,9 +74,15 @@ public class TestGenerator {
             GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
                 T value = testingValues[finalI];
                 parsedValue.setValue(value);
+                if (GameTestRegistry.BEFORE_BATCH_FUNCTIONS.containsKey(batchId)) {
+                    GameTestRegistry.BEFORE_BATCH_FUNCTIONS.get(batchId).accept(serverLevel);
+                }
             });
             GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
                 parsedValue.setDefault();
+                if (GameTestRegistry.AFTER_BATCH_FUNCTIONS.containsKey(batchId)) {
+                    GameTestRegistry.AFTER_BATCH_FUNCTIONS.get(batchId).accept(serverLevel);
+                }
             });
             for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
                 ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
@@ -202,6 +211,8 @@ public class TestGenerator {
                     }
                 }
             }
+            registerBatchFunction(m, BeforeBatch.class, BeforeBatch::batch, GameTestRegistry.BEFORE_BATCH_FUNCTIONS);
+            registerBatchFunction(m, AfterBatch.class, AfterBatch::batch, GameTestRegistry.AFTER_BATCH_FUNCTIONS);
         });
         return Pair.of(simpleTestFunctions, testFunctionGenerators);
     }
@@ -250,6 +261,34 @@ public class TestGenerator {
                 throw new RuntimeException(var4);
             }
         };
+    }
+
+    private static Consumer<ServerLevel> turnBatchMethodIntoConsumer(Method method) {
+        return (object) -> {
+            try {
+                Object object2 = method.getDeclaringClass().newInstance();
+                method.invoke(object2, object);
+            } catch (InvocationTargetException var3) {
+                if (var3.getCause() instanceof RuntimeException) {
+                    throw (RuntimeException)var3.getCause();
+                } else {
+                    throw new RuntimeException(var3.getCause());
+                }
+            } catch (ReflectiveOperationException var4) {
+                throw new RuntimeException(var4);
+            }
+        };
+    }
+
+    private static <T extends Annotation> void registerBatchFunction(Method method, Class<T> clazz, Function<T, String> function, Map<String, Consumer<ServerLevel>> map) {
+        T annotation = method.getAnnotation(clazz);
+        if (annotation != null) {
+            String string = function.apply(annotation);
+            Consumer<ServerLevel> consumer = map.putIfAbsent(string, turnBatchMethodIntoConsumer(method));
+            if (consumer != null) {
+                throw new RuntimeException("Hey, there should only be one " + clazz + " method per batch. Batch '" + string + "' has more than one!");
+            }
+        }
     }
 
     @Getter
