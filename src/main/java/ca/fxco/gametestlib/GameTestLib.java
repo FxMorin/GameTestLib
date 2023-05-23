@@ -29,11 +29,11 @@ public class GameTestLib implements ModInitializer {
         GameTestBlockEntities.boostrap();
         GameTestCreativeModeTabs.bootstrap();
 
+        EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, configBinder -> {
+            CONFIG_MANAGER.loadBinder(configBinder);
+        });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CURRENT_SERVER = server;
-            EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, configBinder -> {
-                CONFIG_MANAGER.loadBinder(server, configBinder);
-            });
         });
     }
 

@@ -1,7 +1,6 @@
 package ca.fxco.api.gametestlib.config.binder;
 
 import ca.fxco.api.gametestlib.config.ParsedValue;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.Map;
 
@@ -13,5 +12,5 @@ public abstract class ConfigBinder {
     /**
      * Register all the config values
      */
-    public abstract Map<String, ParsedValue<?>> registerConfigValues(MinecraftServer server);
+    public abstract Map<String, ParsedValue<?>> registerConfigValues();
 }

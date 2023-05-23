@@ -22,8 +22,8 @@ public class ConfigManager {
 
     private final Map<String, ParsedValue<?>> values = new HashMap<>();
 
-    public void loadBinder(MinecraftServer server, ConfigBinder binder) {
-        this.values.putAll(binder.registerConfigValues(server));
+    public void loadBinder(ConfigBinder binder) {
+        this.values.putAll(binder.registerConfigValues());
     }
 
     public Optional<ParsedValue<?>> get(String valueName) {
