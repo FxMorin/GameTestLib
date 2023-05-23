@@ -26,7 +26,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -91,7 +93,9 @@ public class EntityInteractionBlock extends Block implements GameMasterBlock {
 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        setTrigger(level, blockState, blockPos, InteractionType.INSIDE);
+        if (Shapes.joinIsNotEmpty(Shapes.create(entity.getBoundingBox().deflate(0.001).move(-blockPos.getX(), -blockPos.getY(), -blockPos.getZ())), blockState.getShape(level, blockPos), BooleanOp.AND)) {
+            setTrigger(level, blockState, blockPos, InteractionType.INSIDE);
+        }
         super.entityInside(blockState, level, blockPos, entity);
     }
 
