@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -23,40 +22,39 @@ public class GameTestNetwork {
     private static final HashMap<Class<? extends GameTestPacket>, ResourceLocation> CLIENTBOUND_PACKET_TYPES = new HashMap<>();
     private static final HashMap<Class<? extends GameTestPacket>, ResourceLocation> SERVERBOUND_PACKET_TYPES = new HashMap<>();
 
-    public static void initialize() {
-        EnvType envType = FabricLoader.getInstance().getEnvironmentType();
-        registerServerReceiver(envType, "pulse_state_block", ServerboundSetPulseStatePacket.class, ServerboundSetPulseStatePacket::new);
-        registerServerReceiver(envType, "check_state_block", ServerboundSetCheckStatePacket.class, ServerboundSetCheckStatePacket::new);
+    public static void initializeServer() {
+        registerServerReceiver("pulse_state_block", ServerboundSetPulseStatePacket.class, ServerboundSetPulseStatePacket::new);
+        registerServerReceiver("check_state_block", ServerboundSetCheckStatePacket.class, ServerboundSetCheckStatePacket::new);
+    }
+
+    public static void initializeClient() {
+        // Add client receivers here
     }
 
     //
     // Registering Packets
     //
 
-    private static <T extends GameTestPacket> void registerClientReceiver(EnvType envType, String id, Class<T> type,
+    private static <T extends GameTestPacket> void registerClientReceiver(String id, Class<T> type,
                                                                           Supplier<T> packetGen) {
         ResourceLocation resourceId = id(id);
         CLIENTBOUND_PACKET_TYPES.put(type, resourceId);
-        if (envType == EnvType.CLIENT) {
-            ClientPlayNetworking.registerGlobalReceiver(resourceId, (client, handler, buf, packetSender) -> {
-                T packet = packetGen.get();
-                packet.read(buf);
-                client.execute(() -> packet.handleClient(client, packetSender));
-            });
-        }
+        ClientPlayNetworking.registerGlobalReceiver(resourceId, (client, handler, buf, packetSender) -> {
+            T packet = packetGen.get();
+            packet.read(buf);
+            client.execute(() -> packet.handleClient(client, packetSender));
+        });
     }
 
-    private static <T extends GameTestPacket> void registerServerReceiver(EnvType envType, String id, Class<T> type,
+    private static <T extends GameTestPacket> void registerServerReceiver(String id, Class<T> type,
                                                                           Supplier<T> packetGen) {
         ResourceLocation resourceId = id(id);
         SERVERBOUND_PACKET_TYPES.put(type, resourceId);
-        if (envType == EnvType.SERVER) {
-            ServerPlayNetworking.registerGlobalReceiver(resourceId, (server, player, listener, buf, packetSender) -> {
-                T packet = packetGen.get();
-                packet.read(buf);
-                server.execute(() -> packet.handleServer(server, player, packetSender));
-            });
-        }
+        ServerPlayNetworking.registerGlobalReceiver(resourceId, (server, player, listener, buf, packetSender) -> {
+            T packet = packetGen.get();
+            packet.read(buf);
+            server.execute(() -> packet.handleServer(server, player, packetSender));
+        });
     }
 
     //

@@ -17,6 +17,9 @@
     "main": [
       "ca.fxco.gametestlib.GameTestLib"
     ],
+    "client": [
+      "ca.fxco.gametestlib.GameTestClientLib"
+    ],
     "fabric-datagen": [
       "ca.fxco.gametestlib.datagen.GameTestDataGen"
     ],

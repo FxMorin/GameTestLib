@@ -4,8 +4,6 @@ import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
 import ca.fxco.gametestlib.gametest.expansion.BlockStateExp;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,7 +45,6 @@ public class ServerboundSetCheckStatePacket extends GameTestPacket {
         }
     }
 
-    @Environment(EnvType.SERVER)
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer fromPlayer, PacketSender packetSender) {
         if (fromPlayer.canUseGameMasterBlocks()) {

@@ -73,7 +73,6 @@ public class ServerboundSetPulseStatePacket extends GameTestPacket {
         }
     }
 
-    @Environment(EnvType.SERVER)
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer fromPlayer, PacketSender packetSender) {
         if (fromPlayer.canUseGameMasterBlocks()) {
