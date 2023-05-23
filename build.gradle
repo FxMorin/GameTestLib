@@ -94,8 +94,9 @@ jar {
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        main (MavenPublication) {
+            artifactId "gametestlib"
+            artifact(remapJar)
         }
     }
 }
