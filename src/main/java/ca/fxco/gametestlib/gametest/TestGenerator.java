@@ -1,5 +1,6 @@
 package ca.fxco.gametestlib.gametest;
 
+import ca.fxco.api.gametestlib.config.ParsedValue;
 import ca.fxco.gametestlib.GameTestLib;
 import ca.fxco.gametestlib.Utils.Utils;
 import ca.fxco.gametestlib.gametest.expansion.Config;
@@ -25,6 +26,8 @@ import java.util.function.Consumer;
 
 public class TestGenerator {
 
+    private static final String ENTRYPOINT_KEY = GameTestLib.MOD_ID + "-gametest";
+
     private static final Map<Class<?>, String> GAME_TEST_IDS = new HashMap<>();
 
     @GameTestGenerator
@@ -42,53 +45,58 @@ public class TestGenerator {
         int countBatch = 0;
         for (TestGenerator.GameTestCalcBatch calcBatch : gameTestCalcBatches) {
             String batchId = calcBatch.hasName() ? calcBatch.getName() : "" + countBatch;
-            List<String> batchNames = new ArrayList<>();
             // TODO: Add a way to try all combinations of options, instead of one at a time
             for (String configName : calcBatch.getValues()) {
-                // TODO: CONFIG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                ParsedValue<?> parsedValue = PistonLib.CONFIG_MANAGER.getParsedValues().get(configName);
-                Object[] objs = parsedValue.getAllTestingValues();
-                for (int i = 0; i < objs.length; i++) {
-                    String currentBatchId = batchId + "-" + configName + "-" + i;
-                    batchNames.add(currentBatchId);
-                    int finalI = i;
-                    GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
-                        Object obj = objs[finalI];
-                        parsedValue.setValueObj(obj);
-                    });
-                    GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
-                        parsedValue.reset();
-                    });
-                    for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
-                        ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
-                        simpleTestFunctions.add(
-                                generateTestFunctionWithCustomData(
-                                        generator.getMethod(),
-                                        gameTestHelper -> {
-                                            if (gameTestConfig.customBlocks()) {
-                                                Config.GameTestChanges changes = generator.getSpecialValues()
-                                                        .getOrDefault(configName, Config.GameTestChanges.NONE);
-                                                GameTestUtil.pistonLibGameTest(gameTestHelper, changes);
-                                            }
-                                            turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);
-                                        },
-                                        generator.getGameTestDataBuilder().batch(currentBatchId).build()
-                                )
-                        );
-                    }
+                Optional<ParsedValue<?>> parsedValueOpt = GameTestLib.CONFIG_MANAGER.get(configName);
+                if (parsedValueOpt.isEmpty()) {
+                    continue;
                 }
+                generateValueTestFunctions(parsedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
             }
             countBatch++;
-            System.out.println(batchNames);
         }
         System.out.println("TestGenerator has generated: " + simpleTestFunctions.size() + " test functions as: " + countBatch + " batches");
 
         return simpleTestFunctions;
     }
 
+    private <T> void generateValueTestFunctions(ParsedValue<T> parsedValue, String batchId, String configName,
+                                                TestGenerator.GameTestCalcBatch calcBatch,
+                                                List<TestFunction> simpleTestFunctions) {
+        T[] testingValues = parsedValue.getTestingValues();
+        for (int i = 0; i < testingValues.length; i++) {
+            String currentBatchId = batchId + "-" + configName + "-" + i;
+            int finalI = i;
+            GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
+                T value = testingValues[finalI];
+                parsedValue.setValue(value);
+            });
+            GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
+                parsedValue.setDefault();
+            });
+            for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
+                ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
+                simpleTestFunctions.add(
+                        generateTestFunctionWithCustomData(
+                                generator.getMethod(),
+                                gameTestHelper -> {
+                                    if (gameTestConfig.customBlocks()) {
+                                        Config.GameTestChanges changes = generator.getSpecialValues()
+                                                .getOrDefault(configName, Config.GameTestChanges.NONE);
+                                        GameTestUtil.pistonLibGameTest(gameTestHelper, changes);
+                                    }
+                                    turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);
+                                },
+                                generator.getGameTestDataBuilder().batch(currentBatchId).build()
+                        )
+                );
+            }
+        }
+    }
+
     public static List<Class<?>> getEntrypoints() {
         List<EntrypointContainer<Object>> entrypointContainers = FabricLoader.getInstance()
-                .getEntrypointContainers(GameTestLib.MOD_ID, Object.class);
+                .getEntrypointContainers(ENTRYPOINT_KEY, Object.class);
 
         List<Class<?>> entrypointClasses = new ArrayList<>();
         for (EntrypointContainer<Object> container : entrypointContainers) {
@@ -224,27 +232,6 @@ public class TestGenerator {
         String string5 = gameTestData.batch;
         Rotation rotation = StructureUtils.getRotationForRotationSteps(gameTestData.rotationSteps);
         return new TestFunction(string5, string3, string4, rotation, gameTestData.timeoutTicks, gameTestData.setupTicks, gameTestData.required, gameTestData.requiredSuccesses, gameTestData.attempts, turnMethodIntoConsumer(method));
-    }
-
-    public static void registerClassWithCustomBatch(Class<?> clazz, String batch) {
-        Arrays.stream(clazz.getDeclaredMethods()).forEach(m -> {
-            if (m.isAnnotationPresent(GameTest.class)) {
-                GameTest gameTest = m.getAnnotation(GameTest.class);
-                GameTestData gameTestData = GameTestData.builderFrom(gameTest).batch(batch).build();
-                GameTestRegistry.getAllTestFunctions().add(generateTestFunctionWithCustomData(m, gameTestData));
-            }
-        });
-    }
-
-    public static TestFunction turnMethodIntoTestFunction(Method method) {
-        GameTest gameTest = method.getAnnotation(GameTest.class);
-        String string = method.getDeclaringClass().getSimpleName();
-        String string2 = string.toLowerCase();
-        String string3 = string2 + "." + method.getName().toLowerCase();
-        String string4 = gameTest.template().isEmpty() ? string3 : string2 + "." + gameTest.template();
-        String string5 = gameTest.batch();
-        Rotation rotation = StructureUtils.getRotationForRotationSteps(gameTest.rotationSteps());
-        return new TestFunction(string5, string3, string4, rotation, gameTest.timeoutTicks(), gameTest.setupTicks(), gameTest.required(), gameTest.requiredSuccesses(), gameTest.attempts(), turnMethodIntoConsumer(method));
     }
 
     private static Consumer<GameTestHelper> turnMethodIntoConsumer(Method method) {

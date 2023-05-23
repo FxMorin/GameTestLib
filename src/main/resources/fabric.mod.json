@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "gametestlib",
+  "version": "${version}",
+  "name": "GameTestLib",
+  "description": "Very powerful GameTest extension for ease of use",
+  "authors": [
+    "FX - PR0CESS"
+  ],
+  "contact": {
+    "repo": "https://github.com/fxemo/GameTestLib"
+  },
+  "license": "MIT",
+  "icon": "assets/gametestlib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ca.fxco.gametestlib.GameTestLib"
+    ]
+  },
+  "accessWidener" : "gametestlib.accesswidener",
+  "mixins": [
+    "gametestlib.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=0.76.0",
+    "minecraft": "${minecraft_version}"
+  }
+}
