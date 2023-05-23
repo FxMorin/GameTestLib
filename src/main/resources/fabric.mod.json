@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "ca.fxco.gametestlib.GameTestLib"
+    ],
+    "fabric-gametest": [
+      "ca.fxco.gametestlib.gametest.TestGenerator"
     ]
   },
   "accessWidener" : "gametestlib.accesswidener",
