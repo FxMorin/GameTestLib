@@ -3,7 +3,7 @@
   "id": "gametestlib",
   "version": "${version}",
   "name": "GameTestLib",
-  "description": "Very powerful GameTest extension for ease of use",
+  "description": "Very powerful GameTest extension to simplify testing",
   "authors": [
     "FX - PR0CESS"
   ],
