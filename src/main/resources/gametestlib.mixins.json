@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ca.fxco.gametestlib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "gametest.GameTestServerMixin",
+    "gametest.StructureBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
