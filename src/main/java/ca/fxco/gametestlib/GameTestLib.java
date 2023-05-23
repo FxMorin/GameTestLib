@@ -3,6 +3,7 @@ package ca.fxco.gametestlib;
 import ca.fxco.api.gametestlib.config.binder.ConfigBinder;
 import ca.fxco.gametestlib.base.GameTestBlockEntities;
 import ca.fxco.gametestlib.base.GameTestBlocks;
+import ca.fxco.gametestlib.base.GameTestCreativeModeTabs;
 import ca.fxco.gametestlib.base.GameTestItems;
 import ca.fxco.gametestlib.config.ConfigManager;
 import net.fabricmc.api.ModInitializer;
@@ -26,6 +27,7 @@ public class GameTestLib implements ModInitializer {
         GameTestBlocks.boostrap();
         GameTestItems.boostrap();
         GameTestBlockEntities.boostrap();
+        GameTestCreativeModeTabs.bootstrap();
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CURRENT_SERVER = server;

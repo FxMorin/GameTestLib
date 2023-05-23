@@ -30,7 +30,7 @@ public class CheckStateScreen extends Screen {
     private Checkbox failOnFoundCheckbox;
 
     protected CheckStateScreen(CheckStateBlockEntity blockEntity) {
-        super(Component.translatable("screen.pistonlib.check_state_block.title"));
+        super(Component.translatable("screen.gametestlib.check_state_block.title"));
         this.blockEntity = blockEntity;
     }
 
@@ -70,21 +70,21 @@ public class CheckStateScreen extends Screen {
             this.minecraft.setScreen(null);
         }).bounds(this.width / 2 + 4, 210, 150, 20).build());
 
-        this.tickEdit = new EditBox(this.font, this.width / 2 - 150 - 4, 50, 150, 20, Component.translatable("screen.pistonlib.check_state_block.tick"));
+        this.tickEdit = new EditBox(this.font, this.width / 2 - 150 - 4, 50, 150, 20, Component.translatable("screen.gametestlib.check_state_block.tick"));
         this.tickEdit.setMaxLength(6);
         this.tickEdit.setValue("" + this.blockEntity.getTick());
         this.addWidget(this.tickEdit);
-        //this.font, this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.pistonlib.pulse_state_block.duration")
+        //this.font, this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.gametestlib.pulse_state_block.duration")
         this.directionCycleButton = new CycleButton.Builder<Direction>(dir -> Component.literal(dir.toString()))
                 .withInitialValue(this.blockEntity.getDirection())
                 .withValues(Direction.values())
-                .create(this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.pistonlib.check_state_block.direction"));
+                .create(this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.gametestlib.check_state_block.direction"));
         this.addWidget(this.directionCycleButton);
-        this.stateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 308, 20, Component.translatable("screen.pistonlib.check_state_block.state"));
+        this.stateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 308, 20, Component.translatable("screen.gametestlib.check_state_block.state"));
         this.stateEdit.setMaxLength(255);
         this.stateEdit.setValue(this.blockEntity.getBlockStateExp().asString());
         this.addWidget(this.stateEdit);
-        this.failOnFoundCheckbox = new Checkbox(this.width / 2 - 154, 130, 100, 20, Component.translatable("screen.pistonlib.check_state_block.failOnFind"), this.blockEntity.isFailOnFound());
+        this.failOnFoundCheckbox = new Checkbox(this.width / 2 - 154, 130, 100, 20, Component.translatable("screen.gametestlib.check_state_block.failOnFind"), this.blockEntity.isFailOnFound());
         this.addWidget(this.failOnFoundCheckbox);
 
         this.setInitialFocus(this.stateEdit);
@@ -124,11 +124,11 @@ public class CheckStateScreen extends Screen {
         this.renderBackground(poseStack);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
 
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.check_state_block.tick"), this.width / 2 - 153, 40, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.tick"), this.width / 2 - 153, 40, 10526880);
         this.tickEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.check_state_block.direction"), this.width / 2 + 4, 40, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.direction"), this.width / 2 + 4, 40, 10526880);
         this.directionCycleButton.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.check_state_block.state"), this.width / 2 - 153, 80, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.state"), this.width / 2 - 153, 80, 10526880);
         this.stateEdit.render(poseStack, i, j, f);
         this.failOnFoundCheckbox.render(poseStack, i, j, f);
 

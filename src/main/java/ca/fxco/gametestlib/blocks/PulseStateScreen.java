@@ -28,7 +28,7 @@ public class PulseStateScreen extends Screen {
     private BlockStateSuggestions blockStateSuggestionsLast;
 
     public PulseStateScreen(PulseStateBlockEntity blockEntity) {
-        super(Component.translatable("screen.pistonlib.pulse_state_block.title"));
+        super(Component.translatable("screen.gametestlib.pulse_state_block.title"));
         this.blockEntity = blockEntity;
     }
 
@@ -68,23 +68,23 @@ public class PulseStateScreen extends Screen {
             this.minecraft.setScreen(null);
         }).bounds(this.width / 2 + 4, 210, 150, 20).build());
 
-        this.pulseDelayEdit = new EditBox(this.font, this.width / 2 - 150 - 4, 50, 150, 20, Component.translatable("screen.pistonlib.pulse_state_block.delay"));
+        this.pulseDelayEdit = new EditBox(this.font, this.width / 2 - 150 - 4, 50, 150, 20, Component.translatable("screen.gametestlib.pulse_state_block.delay"));
         this.pulseDelayEdit.setMaxLength(6);
         this.pulseDelayEdit.setValue("" + this.blockEntity.getDelay());
         this.addWidget(this.pulseDelayEdit);
-        this.pulseDurationEdit = new EditBox(this.font, this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.pistonlib.pulse_state_block.duration"));
+        this.pulseDurationEdit = new EditBox(this.font, this.width / 2 + 4, 50, 150, 20, Component.translatable("screen.gametestlib.pulse_state_block.duration"));
         this.pulseDurationEdit.setMaxLength(6);
         this.pulseDurationEdit.setValue("" + this.blockEntity.getDuration());
         this.addWidget(this.pulseDurationEdit);
-        this.firstStateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 308, 20, Component.translatable("screen.pistonlib.pulse_state_block.firstState"));
+        this.firstStateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 308, 20, Component.translatable("screen.gametestlib.pulse_state_block.firstState"));
         this.firstStateEdit.setMaxLength(255);
         this.firstStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getFirstBlockState()));
         this.addWidget(this.firstStateEdit);
-        this.pulseStateEdit = new EditBox(this.font, this.width / 2 - 154, 130, 308, 20, Component.translatable("screen.pistonlib.pulse_state_block.pulseState"));
+        this.pulseStateEdit = new EditBox(this.font, this.width / 2 - 154, 130, 308, 20, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"));
         this.pulseStateEdit.setMaxLength(255);
         this.pulseStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getPulseBlockState()));
         this.addWidget(this.pulseStateEdit);
-        this.lastStateEdit = new EditBox(this.font, this.width / 2 - 154, 170, 308, 20, Component.translatable("screen.pistonlib.pulse_state_block.lastState"));
+        this.lastStateEdit = new EditBox(this.font, this.width / 2 - 154, 170, 308, 20, Component.translatable("screen.gametestlib.pulse_state_block.lastState"));
         this.lastStateEdit.setMaxLength(255);
         this.lastStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getLastBlockState()));
         this.addWidget(this.lastStateEdit);
@@ -141,15 +141,15 @@ public class PulseStateScreen extends Screen {
         this.renderBackground(poseStack);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
 
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
         this.pulseDelayEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
         this.pulseDurationEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
         this.firstStateEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
         this.pulseStateEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.pistonlib.pulse_state_block.lastState"), this.width / 2 - 153, 160, 10526880);
+        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.lastState"), this.width / 2 - 153, 160, 10526880);
         this.lastStateEdit.render(poseStack, i, j, f);
 
         super.render(poseStack, i, j, f);
