@@ -1,0 +1,20 @@
+{
+  "itemGroup.gametestlib.main": "GameTestLib",
+  "block.gametestlib.pulse_state_block": "Pulse State Block",
+  "block.gametestlib.check_state_block": "Check State Block",
+  "block.gametestlib.test_trigger_block": "Test Trigger Block",
+  "block.gametestlib.gametest_redstone_block": "GameTest Redstone Block",
+  "screen.gametestlib.pulse_state_block.title": "Pulse State Block",
+  "screen.gametestlib.pulse_state_block.delay": "Pulse Delay",
+  "screen.gametestlib.pulse_state_block.duration": "Pulse Duration",
+  "screen.gametestlib.pulse_state_block.firstState": "Initial State",
+  "screen.gametestlib.pulse_state_block.pulseState": "Pulse State",
+  "screen.gametestlib.pulse_state_block.lastState": "Final State",
+  "screen.gametestlib.check_state_block.title": "Check State Block",
+  "screen.gametestlib.check_state_block.tick": "On Tick",
+  "screen.gametestlib.check_state_block.direction": "Direction",
+  "screen.gametestlib.check_state_block.state": "BlockState to find",
+  "screen.gametestlib.check_state_block.failOnFind": "Fail On Found",
+  "screen.gametestlib.check_state_block.invertState": "Invert State",
+  "screen.gametestlib.check_state_block.ignorePistons": "Ignore Moving Pistons"
+}
