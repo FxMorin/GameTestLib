@@ -1,10 +1,9 @@
 package ca.fxco.gametestlib.config;
 
 import ca.fxco.api.gametestlib.config.ParsedValue;
-import ca.fxco.gametestlib.GameTestLib;
+import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.api.gametestlib.config.binder.ConfigBinder;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
 @NoArgsConstructor
 public class ConfigManager {
 
-    private static final Logger LOGGER = Logger.getLogger(GameTestLib.MOD_ID);
+    private static final Logger LOGGER = Logger.getLogger(GameTestLibMod.MOD_ID);
 
     private final Map<String, ParsedValue<?>> values = new HashMap<>();
 

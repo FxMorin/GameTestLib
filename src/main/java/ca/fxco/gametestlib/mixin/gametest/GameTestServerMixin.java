@@ -1,6 +1,6 @@
 package ca.fxco.gametestlib.mixin.gametest;
 
-import ca.fxco.gametestlib.GameTestLib;
+import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.gametest.expansion.GameTestPlayerList;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.GameProfileRepository;
@@ -84,7 +84,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
             )
     )
     private void preventHalt(GameTestServer instance, boolean b) {
-        if (!GameTestLib.KEEPALIVE_ACTIVE) {
+        if (!GameTestLibMod.KEEPALIVE_ACTIVE) {
             instance.halt(b);
         } else {
             keepAlive = true;
@@ -102,7 +102,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
                                               SignatureValidator signatureValidator,
                                               GameProfileRepository gameProfileRepository,
                                               GameProfileCache gameProfileCache) {
-        return GameTestLib.KEEPALIVE_ACTIVE ?
+        return GameTestLibMod.KEEPALIVE_ACTIVE ?
                 Services.create(new YggdrasilAuthenticationService(Proxy.NO_PROXY), new File(".")) :
                 new Services(null, SignatureValidator.NO_VALIDATION, null, null);
     }
@@ -123,7 +123,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
     private void setServerInfo(Thread thread, LevelStorageSource.LevelStorageAccess levelStorageAccess,
                                PackRepository packRepository, WorldStem worldStem, Collection collection,
                                BlockPos blockPos, CallbackInfo ci) {
-        if (GameTestLib.KEEPALIVE_ACTIVE) {
+        if (GameTestLibMod.KEEPALIVE_ACTIVE) {
             customPublishServer(GameType.CREATIVE, 25565);
         }
     }
@@ -160,7 +160,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
      */
     @Overwrite
     public boolean isDedicatedServer() {
-        return GameTestLib.KEEPALIVE_ACTIVE;
+        return GameTestLibMod.KEEPALIVE_ACTIVE;
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
      */
     @Overwrite
     public boolean isPublished() {
-        return GameTestLib.KEEPALIVE_ACTIVE;
+        return GameTestLibMod.KEEPALIVE_ACTIVE;
     }
 
     @Override

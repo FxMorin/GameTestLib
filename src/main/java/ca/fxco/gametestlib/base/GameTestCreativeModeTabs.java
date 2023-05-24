@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-import static ca.fxco.gametestlib.GameTestLib.id;
+import static ca.fxco.gametestlib.GameTestLibMod.id;
 
 public class GameTestCreativeModeTabs {
 

@@ -1,6 +1,6 @@
 package ca.fxco.api.gametestlib.config;
 
-import ca.fxco.gametestlib.GameTestLib;
+import ca.fxco.gametestlib.GameTestLibMod;
 import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.minecraft.world.level.GameRules;
@@ -12,7 +12,7 @@ public class GameRuleParsedValue<T extends GameRules.Value<T>> extends ParsedVal
 
     public GameRuleParsedValue(GameRules.Key<T> key) {
         this.key = key;
-        this.originalValue = GameTestLib.CURRENT_SERVER.getGameRules().getRule(key);
+        this.originalValue = GameTestLibMod.CURRENT_SERVER.getGameRules().getRule(key);
     }
 
     @Override
@@ -37,11 +37,11 @@ public class GameRuleParsedValue<T extends GameRules.Value<T>> extends ParsedVal
 
     @Override
     public void setValue(String value) {
-        GameTestLib.CURRENT_SERVER.getGameRules().getRule(key).deserialize(value);
+        GameTestLibMod.CURRENT_SERVER.getGameRules().getRule(key).deserialize(value);
     }
 
     @Override
     public void setDefault() {
-        GameTestLib.CURRENT_SERVER.getGameRules().getRule(key).setFrom(this.originalValue, GameTestLib.CURRENT_SERVER);
+        GameTestLibMod.CURRENT_SERVER.getGameRules().getRule(key).setFrom(this.originalValue, GameTestLibMod.CURRENT_SERVER);
     }
 }

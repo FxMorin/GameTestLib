@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import static ca.fxco.gametestlib.GameTestLib.id;
+import static ca.fxco.gametestlib.GameTestLibMod.id;
 
 public class GameTestBlockEntities {
 

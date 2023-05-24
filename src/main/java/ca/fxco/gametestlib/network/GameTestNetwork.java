@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-import static ca.fxco.gametestlib.GameTestLib.id;
+import static ca.fxco.gametestlib.GameTestLibMod.id;
 
 public class GameTestNetwork {
 

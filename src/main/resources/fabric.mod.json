@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "ca.fxco.gametestlib.GameTestLib"
+      "ca.fxco.gametestlib.GameTestLibMod"
     ],
     "client": [
       "ca.fxco.gametestlib.GameTestClientLib"

@@ -13,7 +13,7 @@ import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 
-public class GameTestLib implements ModInitializer {
+public class GameTestLibMod implements ModInitializer {
 
     public static final String MOD_ID = "gametestlib";
 

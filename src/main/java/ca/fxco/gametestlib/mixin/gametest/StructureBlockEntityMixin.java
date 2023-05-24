@@ -1,6 +1,6 @@
 package ca.fxco.gametestlib.mixin.gametest;
 
-import ca.fxco.gametestlib.GameTestLib;
+import ca.fxco.gametestlib.GameTestLibMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -38,7 +38,7 @@ public abstract class StructureBlockEntityMixin extends BlockEntity {
     )
     private Optional<StructureTemplate> getFromTestStructures(StructureTemplateManager instance,
                                                               ResourceLocation resourceLocation) {
-        if (GameTestLib.GAMETEST_ACTIVE && this.getLevel() instanceof ServerLevel serverLevel) {
+        if (GameTestLibMod.GAMETEST_ACTIVE && this.getLevel() instanceof ServerLevel serverLevel) {
             try {
                 return Optional.of(getStructureTemplate(resourceLocation.getPath(), serverLevel));
             } catch (RuntimeException re) {

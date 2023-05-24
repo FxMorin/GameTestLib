@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.gametest;
 
 import ca.fxco.api.gametestlib.config.ParsedValue;
-import ca.fxco.gametestlib.GameTestLib;
+import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.Utils.Utils;
 import ca.fxco.gametestlib.gametest.expansion.Config;
 import ca.fxco.gametestlib.gametest.expansion.GameTestConfig;
@@ -29,7 +29,7 @@ import java.util.function.Function;
 
 public class TestGenerator {
 
-    private static final String ENTRYPOINT_KEY = GameTestLib.MOD_ID + "-gametest";
+    private static final String ENTRYPOINT_KEY = GameTestLibMod.MOD_ID + "-gametest";
 
     private static final Map<Class<?>, String> GAME_TEST_IDS = new HashMap<>();
 
@@ -51,7 +51,7 @@ public class TestGenerator {
             String batchId = calcBatch.hasName() ? calcBatch.getName() : "" + countBatch;
             // TODO: Add a way to try all combinations of options, instead of one at a time
             for (String configName : calcBatch.getValues()) {
-                Optional<ParsedValue<?>> parsedValueOpt = GameTestLib.CONFIG_MANAGER.get(configName);
+                Optional<ParsedValue<?>> parsedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
                 if (parsedValueOpt.isEmpty()) {
                     continue;
                 }
