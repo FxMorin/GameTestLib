@@ -8,6 +8,7 @@
 - Proper combination logic
 - Block for testing entities (with renderers)
 - Add a test mod to test GameTestLib (testception)
+- Add colored borders around batches on the ground (possibly around inner batches also)
 
 ## Features
 - Able to join the test server

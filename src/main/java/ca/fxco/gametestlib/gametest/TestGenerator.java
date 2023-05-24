@@ -213,6 +213,11 @@ public class TestGenerator {
             }
             registerBatchFunction(m, BeforeBatch.class, BeforeBatch::batch, GameTestRegistry.BEFORE_BATCH_FUNCTIONS);
             registerBatchFunction(m, AfterBatch.class, AfterBatch::batch, GameTestRegistry.AFTER_BATCH_FUNCTIONS);
+
+            GameTestGenerator gameTestGenerator = m.getAnnotation(GameTestGenerator.class);
+            if (gameTestGenerator != null) {
+                simpleTestFunctions.addAll(useTestGeneratorMethod(m));
+            }
         });
         return Pair.of(simpleTestFunctions, testFunctionGenerators);
     }
@@ -288,6 +293,15 @@ public class TestGenerator {
             if (consumer != null) {
                 throw new RuntimeException("Hey, there should only be one " + clazz + " method per batch. Batch '" + string + "' has more than one!");
             }
+        }
+    }
+
+    private static Collection<TestFunction> useTestGeneratorMethod(Method method) {
+        try {
+            Object object = method.getDeclaringClass().newInstance();
+            return (Collection)method.invoke(object);
+        } catch (ReflectiveOperationException var2) {
+            throw new RuntimeException(var2);
         }
     }
 
