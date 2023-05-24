@@ -143,7 +143,7 @@ public class DiscordTestReporter implements TestReporter {
                 desc = Component.translatable("gametest.gametestlib.discord_test_reporter.runTime", toTimeFormat(gameTestInfo.getRunTime())).getString();
             } else {
                 desc = Component.translatable("gametest.gametestlib.discord_test_reporter.failure.position", gameTestInfo.getStructureBlockPos().toString()).getString() + "\n" +
-                        Component.translatable("gametest.gametestlib.discord_test_reporter.failure.error", gameTestInfo.getError().getMessage()).getString();
+                        Component.translatable("gametest.gametestlib.discord_test_reporter.failure.error", gameTestInfo.getError() != null ? gameTestInfo.getError().getMessage() : "Error").getString();
             }
         }
         String jsonInputString = "{" +
