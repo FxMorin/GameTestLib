@@ -4,7 +4,7 @@ import ca.fxco.api.gametestlib.config.ParsedValue;
 import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.Utils.Utils;
 import ca.fxco.gametestlib.gametest.expansion.Config;
-import ca.fxco.gametestlib.gametest.expansion.GameTestConfig;
+import ca.fxco.gametestlib.gametest.expansion.GameTestLib;
 import ca.fxco.gametestlib.gametest.expansion.ParsedGameTestConfig;
 import ca.fxco.gametestlib.gametest.expansion.TestFunctionGenerator;
 import com.google.common.collect.Sets;
@@ -188,18 +188,18 @@ public class TestGenerator {
     public static Pair<List<TestFunction>, List<TestFunctionGenerator>> generateTestFunctions(Class<?> clazz, String batch) {
         List<TestFunction> simpleTestFunctions = new ArrayList<>();
         List<TestFunctionGenerator> testFunctionGenerators = new ArrayList<>();
-        ParsedGameTestConfig classConfig = clazz.isAnnotationPresent(GameTestConfig.class) ?
-                ParsedGameTestConfig.of(clazz.getAnnotation(GameTestConfig.class)) : null;
+        ParsedGameTestConfig classConfig = clazz.isAnnotationPresent(GameTestLib.class) ?
+                ParsedGameTestConfig.of(clazz.getAnnotation(GameTestLib.class)) : null;
         Arrays.stream(clazz.getDeclaredMethods()).forEach(m -> {
             if (m.isAnnotationPresent(GameTest.class)) {
                 GameTest gameTest = m.getAnnotation(GameTest.class);
                 GameTestData.GameTestDataBuilder gameTestDataBuilder = GameTestData.builderFrom(gameTest);
-                if (m.isAnnotationPresent(GameTestConfig.class)) {
+                if (m.isAnnotationPresent(GameTestLib.class)) {
                     ParsedGameTestConfig gameTestConfig;
                     if (classConfig != null) {
-                        gameTestConfig = classConfig.createMerged(m.getAnnotation(GameTestConfig.class), true);
+                        gameTestConfig = classConfig.createMerged(m.getAnnotation(GameTestLib.class), true);
                     } else {
-                        gameTestConfig = ParsedGameTestConfig.of(m.getAnnotation(GameTestConfig.class));
+                        gameTestConfig = ParsedGameTestConfig.of(m.getAnnotation(GameTestLib.class));
                     }
                     testFunctionGenerators.add(new TestFunctionGenerator(m, gameTestConfig, gameTestDataBuilder.batch(batch)));
                 } else {

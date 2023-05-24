@@ -36,39 +36,39 @@ public class ParsedGameTestConfig {
     }
 
     // GameTestConfig being merged will override values
-    public ParsedGameTestConfig createMerged(GameTestConfig gameTestConfig, boolean clazz) {
+    public ParsedGameTestConfig createMerged(GameTestLib gameTestLib, boolean clazz) {
         if (clazz) {
             // These warning are here otherwise your values would not be doing what you expected them to do!
-            if (this.customBlocks != gameTestConfig.customBlocks()) {
+            if (this.customBlocks != gameTestLib.customBlocks()) {
                 throw new RuntimeException("CustomBlocks cannot be different than the class @GameTestConfig customBlocks value!");
             }
-            if (this.ignored != gameTestConfig.ignored()) {
+            if (this.ignored != gameTestLib.ignored()) {
                 throw new RuntimeException("Ignored cannot be different than the class @GameTestConfig ignored value!");
             }
-            if (this.combined != gameTestConfig.combined()) {
+            if (this.combined != gameTestLib.combined()) {
                 throw new RuntimeException("Combined cannot be different than the class @GameTestConfig combined value!");
             }
         }
         Set<String> tempSet = new HashSet<>(List.of(this.value));
-        tempSet.addAll(List.of(gameTestConfig.value()));
+        tempSet.addAll(List.of(gameTestLib.value()));
         Set<Config> tempSet2 = new HashSet<>(List.of(this.config));
-        tempSet2.addAll(List.of(gameTestConfig.config()));
+        tempSet2.addAll(List.of(gameTestLib.config()));
         return new ParsedGameTestConfig(
-                gameTestConfig.customBlocks(),
+                gameTestLib.customBlocks(),
                 tempSet.toArray(new String[0]),
                 tempSet2.toArray(new Config[0]),
-                gameTestConfig.ignored(),
-                gameTestConfig.combined()
+                gameTestLib.ignored(),
+                gameTestLib.combined()
         );
     }
 
-    public static ParsedGameTestConfig of(GameTestConfig gameTestConfig) {
+    public static ParsedGameTestConfig of(GameTestLib gameTestLib) {
         return new ParsedGameTestConfig(
-                gameTestConfig.customBlocks(),
-                gameTestConfig.value(),
-                gameTestConfig.config(),
-                gameTestConfig.ignored(),
-                gameTestConfig.combined()
+                gameTestLib.customBlocks(),
+                gameTestLib.value(),
+                gameTestLib.config(),
+                gameTestLib.ignored(),
+                gameTestLib.combined()
         );
     }
 }

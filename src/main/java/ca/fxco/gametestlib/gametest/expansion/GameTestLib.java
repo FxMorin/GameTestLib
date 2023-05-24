@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GameTestConfig {
+public @interface GameTestLib {
 
     /**
      * If the custom gametest blocks should be used for this test
