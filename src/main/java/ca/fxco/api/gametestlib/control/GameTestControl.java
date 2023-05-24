@@ -1,7 +1,9 @@
 package ca.fxco.api.gametestlib.control;
 
+import ca.fxco.api.gametestlib.progressbar.GameTestProgressBar;
 import net.minecraft.gametest.framework.GameTestListener;
 import net.minecraft.gametest.framework.TestReporter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -11,9 +13,19 @@ import java.util.List;
  */
 public interface GameTestControl {
 
-    List<TestReporter> registerTestReporters();
+    default List<TestReporter> registerTestReporters() {
+        return List.of();
+    }
 
-    List<GameTestListener> registerGameTestListeners();
+    default List<GameTestListener> registerGameTestListeners() {
+        return List.of();
+    }
 
-    List<GameTestListener> registerGameTestProgressBar();
+    /**
+     * Only a single Custom Progress Bar can be used at a time!
+     * You can set a priority if two mods are conflicting
+     */
+    default @Nullable GameTestProgressBar registerGameTestProgressBar() {
+        return null;
+    }
 }
