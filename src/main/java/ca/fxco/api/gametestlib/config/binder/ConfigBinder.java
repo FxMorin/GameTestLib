@@ -7,10 +7,10 @@ import java.util.Map;
 /**
  * Binders will allow you to register all the config value you want to use within your tests
  */
-public abstract class ConfigBinder {
+public interface ConfigBinder {
 
     /**
      * Register all the config values
      */
-    public abstract Map<String, ParsedValue<?>> registerConfigValues();
+    Map<String, ParsedValue<?>> registerConfigValues();
 }

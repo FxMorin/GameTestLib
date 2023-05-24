@@ -7,7 +7,7 @@ import net.minecraft.world.level.GameRules;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameRuleConfigBinder extends ConfigBinder {
+public class GameRuleConfigBinder implements ConfigBinder {
 
     @Override
     public Map<String, ParsedValue<?>> registerConfigValues() {
