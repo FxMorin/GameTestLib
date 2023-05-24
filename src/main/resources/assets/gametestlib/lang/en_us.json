@@ -16,5 +16,12 @@
   "screen.gametestlib.check_state_block.state": "BlockState to find",
   "screen.gametestlib.check_state_block.failOnFind": "Fail On Found",
   "screen.gametestlib.check_state_block.invertState": "Invert State",
-  "screen.gametestlib.check_state_block.ignorePistons": "Ignore Moving Pistons"
+  "screen.gametestlib.check_state_block.ignorePistons": "Ignore Moving Pistons",
+  "gametest.gametestlib.discord_test_reporter.report.title": "GameTest Report: %s",
+  "gametest.gametestlib.discord_test_reporter.success.title": "Successful Test: %s",
+  "gametest.gametestlib.discord_test_reporter.failure.title": "Failed Test: %s",
+  "gametest.gametestlib.discord_test_reporter.failure.position": "BlockPos: %s",
+  "gametest.gametestlib.discord_test_reporter.failure.error": "Error: %s",
+  "gametest.gametestlib.discord_test_reporter.runTime": "Run Time: %s",
+  "gametest.gametestlib.discord_test_reporter.failedOptionalTests": "Failed Optional Tests: %s"
 }
