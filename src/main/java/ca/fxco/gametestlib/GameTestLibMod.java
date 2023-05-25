@@ -31,6 +31,8 @@ public class GameTestLibMod implements ModInitializer {
     public static final GameTestController CONTROLLER = new GameTestController();
     public static MinecraftServer CURRENT_SERVER = null;
 
+    private static boolean initialized = false;
+
     @Override
     public void onInitialize() {
         GameTestBlocks.boostrap();
@@ -39,14 +41,21 @@ public class GameTestLibMod implements ModInitializer {
         GameTestCreativeModeTabs.bootstrap();
         GameTestNetwork.initializeServer();
 
-        GlobalTestReporter.replaceWith(new MultiTestReporter());
-        EntrypointUtils.invoke(MOD_ID + "-control", GameTestControl.class, CONTROLLER::loadControl);
-        CONTROLLER.initializeDefaults();
+        initializeEntrypoints();
+    }
 
-        EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            CURRENT_SERVER = server;
-        });
+    public static void initializeEntrypoints() {
+        if (!initialized) {
+            initialized = true;
+            GlobalTestReporter.replaceWith(new MultiTestReporter());
+            EntrypointUtils.invoke(MOD_ID + "-control", GameTestControl.class, CONTROLLER::loadControl);
+            CONTROLLER.initializeDefaults();
+
+            EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
+            ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+                CURRENT_SERVER = server;
+            });
+        }
     }
 
     public static ResourceLocation id(String location) {
