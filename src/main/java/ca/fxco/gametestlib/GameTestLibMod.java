@@ -9,11 +9,14 @@ import ca.fxco.gametestlib.base.GameTestItems;
 import ca.fxco.gametestlib.config.ConfigManager;
 import ca.fxco.gametestlib.gametest.GameTestController;
 import ca.fxco.gametestlib.gametest.expansion.MultiTestReporter;
+import ca.fxco.gametestlib.mixin.gametest.GameTestServerAccessor;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.minecraft.gametest.framework.GameTestServer;
 import net.minecraft.gametest.framework.GlobalTestReporter;
+import net.minecraft.gametest.framework.MultipleTestTracker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 
@@ -52,5 +55,13 @@ public class GameTestLibMod implements ModInitializer {
 
     public static void switchServer(MinecraftServer server) {
         CURRENT_SERVER = server;
+    }
+
+    public static boolean areTestsRunning() {
+        if (GAMETEST_ACTIVE && CURRENT_SERVER instanceof GameTestServer gameTestServer) {
+            MultipleTestTracker tracker = ((GameTestServerAccessor)gameTestServer).getTestTracker();
+            return tracker != null && !tracker.isDone();
+        }
+        return false;
     }
 }
