@@ -1,13 +1,18 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
+import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.GameMasterBlock;
 import net.minecraft.world.level.block.PoweredBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -15,10 +20,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 // Instead of using a complicated PulseStateBlock to set a redstone block when the test starts. Just use this block!
 // This also allows you to make a redstone block that will turn off when a test starts by right-clicking the block
-public class GameTestPoweredBlock extends PoweredBlock {
+public class GameTestPoweredBlock extends PoweredBlock implements GameMasterBlock, GameTestActionBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -52,5 +58,17 @@ public class GameTestPoweredBlock extends PoweredBlock {
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
+    }
+
+    //
+    // GameTest Action Logic
+    //
+
+    @Nullable
+    @Override
+    public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
+                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+        helper.setBlock(blockPos, state.cycle(BlockStateProperties.POWERED));
+        return null;
     }
 }

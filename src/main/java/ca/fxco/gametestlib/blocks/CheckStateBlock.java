@@ -1,6 +1,11 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
+import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,8 +17,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
-public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock {
+public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
     public CheckStateBlock(Properties properties) {
         super(properties);
@@ -45,5 +51,50 @@ public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock 
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
+    }
+
+    //
+    // GameTest Action Logic
+    //
+
+    @Nullable
+    @Override
+    public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
+                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+        BlockEntity blockEntity = helper.getBlockEntity(blockPos);
+        if (blockEntity instanceof CheckStateBlockEntity checkStateBe) {
+            BlockPos checkPos = blockPos.relative(checkStateBe.getDirection());
+            return new CheckStateTestCondition(checkStateBe, checkPos, changes == Config.GameTestChanges.FLIP_CHECKS);
+        }
+        return null;
+    }
+
+    public static class CheckStateTestCondition extends GameTestGroupConditions.BasicTestCondition {
+        private final BlockPos checkPos;
+        @Getter
+        private final CheckStateBlockEntity checkStateBe;
+
+        public CheckStateTestCondition(CheckStateBlockEntity checkStateBe, BlockPos checkPos, boolean flip) {
+            this.checkStateBe = checkStateBe;
+            this.checkPos = checkPos.immutable();
+            if (flip) {
+                this.checkStateBe.setFailOnFound(!this.checkStateBe.isFailOnFound());
+            }
+        }
+
+        @Override
+        public boolean isSingleTick() {
+            return this.checkStateBe.getTick() > -1;
+        }
+
+        @Override
+        public boolean canRunThisTick(long tick) {
+            return this.checkStateBe.getTick() == tick;
+        }
+
+        @Override
+        public Boolean runCheck(GameTestHelper helper) {
+            return this.checkStateBe.runGameTestChecks(helper, this.checkPos);
+        }
     }
 }

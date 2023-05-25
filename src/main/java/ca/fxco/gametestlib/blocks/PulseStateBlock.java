@@ -1,6 +1,10 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
+import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,8 +16,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
-public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock {
+public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
     public PulseStateBlock(Properties properties) {
         super(properties);
@@ -25,7 +30,8 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock 
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
+                                 InteractionHand interactionHand, BlockHitResult blockHitResult) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof PulseStateBlockEntity pulseStateBlockEntity) {
             if (level.isClientSide) {
@@ -45,5 +51,33 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock 
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
+    }
+
+    //
+    // GameTest Action Logic
+    //
+
+    @Nullable
+    @Override
+    public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
+                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+        BlockEntity blockEntity = helper.getBlockEntity(blockPos);
+        if (blockEntity instanceof PulseStateBlockEntity pulseStateBe) {
+            helper.setBlock(blockPos, pulseStateBe.getFirstBlockState());
+            int delay = pulseStateBe.getDelay();
+            int duration = pulseStateBe.getDuration();
+            BlockPos blockPos2 = blockPos.immutable();
+            if (delay > 0) {
+                helper.runAfterDelay(delay, () ->
+                        helper.setBlock(blockPos2, pulseStateBe.getPulseBlockState())
+                );
+            }
+            if (duration > 0) {
+                helper.runAfterDelay(delay + duration, () ->
+                        helper.setBlock(blockPos2, pulseStateBe.getLastBlockState())
+                );
+            }
+        }
+        return null;
     }
 }

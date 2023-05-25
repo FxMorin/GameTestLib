@@ -1,16 +1,21 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.gametestlib.base.GameTestBlocks;
 import ca.fxco.gametestlib.base.GameTestProperties;
+import ca.fxco.gametestlib.gametest.GameTestUtil;
+import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
+import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import lombok.AllArgsConstructor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.BlockGetter;
@@ -30,6 +35,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Used to test the entities stepOn(), fallOn(), entityInside(), and onProjectileHit() calls
@@ -37,7 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * and shift right-click the top to change the trigger type.
  * Setting it to null will make it not trigger, which makes it a useful block due to its shapes
  */
-public class EntityInteractionBlock extends Block implements GameMasterBlock {
+public class EntityInteractionBlock extends Block implements GameMasterBlock, GameTestActionBlock {
 
     protected static final VoxelShape[] SHAPE_BY_LEVEL;
 
@@ -133,12 +139,64 @@ public class EntityInteractionBlock extends Block implements GameMasterBlock {
         return PushReaction.BLOCK;
     }
 
+    //
+    // GameTest Action Logic
+    //
+
+    @Nullable
+    @Override
+    public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
+                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+        EntityInteractionCondition condition = new EntityInteractionCondition(
+                blockPos,
+                state.getValue(GameTestProperties.INTERACTION_TYPE),
+                changes == Config.GameTestChanges.FLIP_INTERACTIONS
+        );
+        GameTestUtil.setBlock(
+                helper,
+                blockPos,
+                state.setValue(GameTestProperties.INTERACTION_TYPE, EntityInteractionBlock.InteractionType.NONE),
+                Block.UPDATE_INVISIBLE
+        );
+        return condition;
+    }
+
     static {
         VoxelShape[] levels = new VoxelShape[16];
         for (int i = 16; i >= 1; i--) {
             levels[i - 1] = Block.box(0.0, 0.0, 0.0, 16.0, i, 16.0);
         }
         SHAPE_BY_LEVEL = levels;
+    }
+
+    public static class EntityInteractionCondition extends GameTestGroupConditions.BasicTestCondition {
+        private final BlockPos blockPos;
+        private final boolean flip;
+
+        private final EntityInteractionBlock.InteractionType interactionType;
+
+        public EntityInteractionCondition(BlockPos blockPos, EntityInteractionBlock.InteractionType interactionType,
+                                          boolean flip) {
+            this.blockPos = blockPos.immutable();
+            this.interactionType = interactionType;
+            this.flip = flip;
+        }
+
+        @Override
+        public Boolean runCheck(GameTestHelper helper) {
+            BlockState state = helper.getBlockState(this.blockPos);
+            if (state.getBlock() == GameTestBlocks.ENTITY_INTERACTION_BLOCK) {
+                if (state.getValue(GameTestProperties.INTERACTION_TYPE) == this.interactionType) {
+                    if (state.getValue(BlockStateProperties.INVERTED) == this.flip) {
+                        helper.fail("Test Trigger at " + this.blockPos.toShortString() + " was triggered");
+                        return false;
+                    }
+                    return true;
+                }
+                return null;
+            }
+            return false;
+        }
     }
 
     @AllArgsConstructor

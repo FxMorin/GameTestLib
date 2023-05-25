@@ -1,22 +1,8 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
-import ca.fxco.gametestlib.base.GameTestBlocks;
-import ca.fxco.gametestlib.base.GameTestProperties;
-import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
-import ca.fxco.gametestlib.blocks.EntityInsideBlock;
-import ca.fxco.gametestlib.blocks.EntityInteractionBlock;
-import ca.fxco.gametestlib.gametest.GameTestUtil;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,179 +42,32 @@ public class GameTestGroupConditions {
         return true;
     }
 
-    public void addCondition(CheckStateBlockEntity checkStateBe, BlockPos checkPos, boolean flip) {
-        testConditions.add(new CheckStateTestCondition(checkStateBe, checkPos, flip));
+    public void addCondition(TestCondition testCondition) {
+        testConditions.add(testCondition);
     }
 
-    public void addTestTrigger(BlockPos blockPos, boolean flip) {
-        testConditions.add(new TriggerTestCondition(blockPos, flip));
+    public interface TestCondition {
+        boolean isSuccess();
+        void setSuccess(boolean state);
+        boolean isSingleTick();
+        boolean canRunThisTick(long tick);
+        Boolean runCheck(GameTestHelper helper);
     }
 
-    public void addEntityInteraction(BlockPos blockPos, EntityInteractionBlock.InteractionType type, boolean flip) {
-        testConditions.add(new EntityInteractionCondition(blockPos, type, flip));
-    }
-
-    public void addEntityInside(BlockPos blockPos, EntityInsideBlock.EntityType type, boolean flip) {
-        testConditions.add(new EntityInsideCondition(blockPos, type, flip));
-    }
-
-    public static abstract class TestCondition {
-        public abstract boolean isSuccess();
-        public abstract void setSuccess(boolean state);
-        public abstract boolean isSingleTick();
-        public boolean canRunThisTick(long tick) {return false;}
-        public abstract Boolean runCheck(GameTestHelper helper);
-    }
-
-    public static class EntityInsideCondition extends TestCondition {
+    public static abstract class BasicTestCondition implements TestCondition {
 
         @Getter
         @Setter
         private boolean success = false;
-        private final BlockPos blockPos;
-        private final boolean flip;
-
-        private final EntityInsideBlock.EntityType entityType;
-
-        public EntityInsideCondition(BlockPos blockPos, EntityInsideBlock.EntityType entityType, boolean flip) {
-            this.blockPos = blockPos.immutable();
-            this.entityType = entityType;
-            this.flip = flip;
-        }
 
         @Override
         public boolean isSingleTick() {
             return false;
-        }
-
-        @Override
-        public Boolean runCheck(GameTestHelper helper) {
-            Level level = helper.getLevel();
-            AABB aabb = new AABB(helper.absolutePos(blockPos));
-            List<? extends Entity> list = switch (this.entityType) {
-                case ALL -> level.getEntities(GameTestUtil.ANY_TYPE, aabb, Entity::isAlive);
-                case ITEM -> level.getEntities(EntityType.ITEM, aabb, Entity::isAlive);
-                case PLAYER -> level.getEntities(EntityType.PLAYER, aabb, Entity::isAlive);
-                case LIVING_ENTITY -> level.getEntities(GameTestUtil.LIVING_ENTITY, aabb, Entity::isAlive);
-                case NONE_LIVING_ENTITY -> level.getEntities(GameTestUtil.ANY_TYPE, aabb, entity ->
-                        entity.isAlive() && !(entity instanceof LivingEntity)
-                );
-            };
-            if (list.size() != 0) { // There is an entity touching the area
-                if (this.flip) {
-                    helper.fail("Entity Inside at " + this.blockPos.toShortString());
-                    return false;
-                }
-                return true;
-            }
-            return null;
-        }
-    }
-
-    public static class EntityInteractionCondition extends TestCondition {
-
-        @Getter
-        @Setter
-        private boolean success = false;
-        private final BlockPos blockPos;
-        private final boolean flip;
-
-        private final EntityInteractionBlock.InteractionType interactionType;
-
-        public EntityInteractionCondition(BlockPos blockPos, EntityInteractionBlock.InteractionType interactionType,
-                                          boolean flip) {
-            this.blockPos = blockPos.immutable();
-            this.interactionType = interactionType;
-            this.flip = flip;
-        }
-
-        @Override
-        public boolean isSingleTick() {
-            return false;
-        }
-
-        @Override
-        public Boolean runCheck(GameTestHelper helper) {
-            BlockState state = helper.getBlockState(this.blockPos);
-            if (state.getBlock() == GameTestBlocks.ENTITY_INTERACTION_BLOCK) {
-                if (state.getValue(GameTestProperties.INTERACTION_TYPE) == this.interactionType) {
-                    if (state.getValue(BlockStateProperties.INVERTED) == this.flip) {
-                        helper.fail("Test Trigger at " + this.blockPos.toShortString() + " was triggered");
-                        return false;
-                    }
-                    return true;
-                }
-                return null;
-            }
-            return false;
-        }
-    }
-
-    public static class TriggerTestCondition extends TestCondition {
-
-        @Getter
-        @Setter
-        private boolean success = false;
-        private final BlockPos blockPos;
-        private final boolean flip;
-
-        public TriggerTestCondition(BlockPos blockPos, boolean flip) {
-            this.blockPos = blockPos.immutable();
-            this.flip = flip;
-        }
-
-        @Override
-        public boolean isSingleTick() {
-            return false;
-        }
-
-        @Override
-        public Boolean runCheck(GameTestHelper helper) {
-            BlockState state = helper.getBlockState(this.blockPos);
-            if (state.getBlock() == GameTestBlocks.TEST_TRIGGER_BLOCK) {
-                if (state.getValue(BlockStateProperties.POWERED)) {
-                    if (state.getValue(BlockStateProperties.INVERTED) == this.flip) {
-                        helper.fail("Test Trigger at " + this.blockPos.toShortString() + " was triggered");
-                        return false;
-                    }
-                    return true;
-                }
-                return null;
-            }
-            return false;
-        }
-    }
-
-    public static class CheckStateTestCondition extends TestCondition {
-
-        @Getter
-        @Setter
-        private boolean success = false;
-        private final BlockPos checkPos;
-        @Getter
-        private final CheckStateBlockEntity checkStateBe;
-
-        public CheckStateTestCondition(CheckStateBlockEntity checkStateBe, BlockPos checkPos, boolean flip) {
-            this.checkStateBe = checkStateBe;
-            this.checkPos = checkPos.immutable();
-            if (flip) {
-                this.checkStateBe.setFailOnFound(!this.checkStateBe.isFailOnFound());
-            }
-        }
-
-        @Override
-        public boolean isSingleTick() {
-            return this.checkStateBe.getTick() > -1;
         }
 
         @Override
         public boolean canRunThisTick(long tick) {
-            return this.checkStateBe.getTick() == tick;
-        }
-
-        @Override
-        public Boolean runCheck(GameTestHelper helper) {
-            return this.checkStateBe.runGameTestChecks(helper, this.checkPos);
+            return false;
         }
     }
 }
