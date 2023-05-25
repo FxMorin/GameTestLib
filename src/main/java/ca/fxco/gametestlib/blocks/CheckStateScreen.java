@@ -52,14 +52,7 @@ public class CheckStateScreen extends Screen {
     }
 
     private void onDone() {
-
-        // TODO: Switch to block entity renderer in 1.20
         Direction newDirection = this.blockEntity.getDirection();
-        if (newDirection != this.initialDirection) {
-            Map<BlockPos, Object> markers = ((GameTestDebugRendererAccessor)Minecraft.getInstance().debugRenderer.gameTestDebugRenderer).getMarkers();
-            markers.remove(this.blockEntity.getBlockPos().relative(this.initialDirection));
-        }
-
         HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
         try {
             String stateValue = this.stateEdit.getValue();
@@ -77,19 +70,6 @@ public class CheckStateScreen extends Screen {
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         } // Just don't send if validation failed
-
-        // TODO: Switch to block entity renderer in 1.20
-        Level level = this.blockEntity.getLevel();
-        BlockPos neighborPos = this.blockEntity.getBlockPos().relative(newDirection);
-        GameTestBlocks.CHECK_STATE_BLOCK.updateDebugRenderer(
-                level,
-                this.blockEntity.getBlockPos(),
-                neighborPos,
-                level.getBlockState(neighborPos),
-                newDirection,
-                false,
-                false
-        );
         this.minecraft.setScreen(null);
     }
 
