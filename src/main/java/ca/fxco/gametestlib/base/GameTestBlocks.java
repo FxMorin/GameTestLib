@@ -32,10 +32,14 @@ public class GameTestBlocks {
             "entity_interaction_block",
             new EntityInteractionBlock(FabricBlockSettings.copyOf(Blocks.STONE))
     );
+    public static final EntityInsideBlock ENTITY_INSIDE_BLOCK = register(
+            "entity_inside_block",
+            new EntityInsideBlock(FabricBlockSettings.copyOf(Blocks.STONE).collidable(false))
+    );
 
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(BuiltInRegistries.BLOCK, id(name), block);
     }
 
-    public static void boostrap() { }
+    public static void boostrap() {}
 }

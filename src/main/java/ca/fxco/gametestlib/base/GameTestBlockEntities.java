@@ -1,6 +1,7 @@
 package ca.fxco.gametestlib.base;
 
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
+import ca.fxco.gametestlib.blocks.EntityInsideBlockEntity;
 import ca.fxco.gametestlib.blocks.PulseStateBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -22,6 +23,11 @@ public class GameTestBlockEntities {
             id("check_state_block"),
             FabricBlockEntityTypeBuilder.create(CheckStateBlockEntity::new, GameTestBlocks.CHECK_STATE_BLOCK).build(null)
     );
+    public static final BlockEntityType<EntityInsideBlockEntity> ENTITY_INSIDE_BLOCK_ENTITY = Registry.register(
+            BuiltInRegistries.BLOCK_ENTITY_TYPE,
+            id("entity_inside_block"),
+            FabricBlockEntityTypeBuilder.create(EntityInsideBlockEntity::new, GameTestBlocks.ENTITY_INSIDE_BLOCK).build(null)
+    );
 
-    public static void boostrap() { }
+    public static void boostrap() {}
 }

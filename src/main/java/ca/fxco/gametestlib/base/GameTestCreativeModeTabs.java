@@ -16,9 +16,10 @@ public class GameTestCreativeModeTabs {
                 output.accept(GameTestItems.PULSE_STATE_BLOCK);
                 output.accept(GameTestItems.CHECK_STATE_BLOCK);
                 output.accept(GameTestItems.ENTITY_INTERACTION_BLOCK);
+                output.accept(GameTestItems.ENTITY_INSIDE_BLOCK);
             })
             .build();
 
-    public static void bootstrap() { }
+    public static void bootstrap() {}
 
 }

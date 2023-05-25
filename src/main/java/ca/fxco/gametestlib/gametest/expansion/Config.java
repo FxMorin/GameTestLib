@@ -31,30 +31,31 @@ public @interface Config {
         /**
          * Nothing should change
          */
-        NONE(false, false, false),
+        NONE,
 
         /**
          * TestTrigger Blocks will give the opposite result
          */
-        FLIP_TRIGGERS(true, false, false),
+        FLIP_TRIGGERS,
 
         /**
          * CheckState Blocks will flip their FailOnFound state
          */
-        FLIP_CHECKS(false, true, false),
+        FLIP_CHECKS,
 
         /**
          * EntityInteraction Blocks will give the opposite result
          */
-        FLIP_INTERACTIONS(false, false, true),
+        FLIP_INTERACTIONS,
+
+        /**
+         * EntityInside Blocks will give the opposite result
+         */
+        FLIP_INSIDE,
 
         /**
          * Flip all custom gametest blocks
          */
-        FLIP_ALL(true, true, true);
-
-        private final boolean flipTriggers;
-        private final boolean flipChecks;
-        private final boolean flipInteractions;
+        FLIP_ALL;
     }
 }

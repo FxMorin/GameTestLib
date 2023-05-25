@@ -13,6 +13,7 @@ public class GameTestItems {
     public static final BlockItem TEST_TRIGGER_BLOCK = registerBlock(GameTestBlocks.TEST_TRIGGER_BLOCK);
     public static final BlockItem GAMETEST_REDSTONE_BLOCK = registerBlock(GameTestBlocks.GAMETEST_REDSTONE_BLOCK);
     public static final BlockItem ENTITY_INTERACTION_BLOCK = registerBlock(GameTestBlocks.ENTITY_INTERACTION_BLOCK);
+    public static final BlockItem ENTITY_INSIDE_BLOCK = registerBlock(GameTestBlocks.ENTITY_INSIDE_BLOCK);
 
     private static BlockItem registerBlock(Block block) {
         return registerBlock(block, new Item.Properties());
@@ -26,5 +27,5 @@ public class GameTestItems {
         return Registry.register(BuiltInRegistries.ITEM, id, item);
     }
 
-    public static void boostrap() { }
+    public static void boostrap() {}
 }

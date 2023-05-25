@@ -3,20 +3,37 @@ package ca.fxco.gametestlib.gametest;
 import ca.fxco.gametestlib.base.GameTestBlocks;
 import ca.fxco.gametestlib.base.GameTestProperties;
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
+import ca.fxco.gametestlib.blocks.EntityInsideBlock;
 import ca.fxco.gametestlib.blocks.EntityInteractionBlock;
 import ca.fxco.gametestlib.blocks.PulseStateBlockEntity;
 import ca.fxco.gametestlib.gametest.expansion.Config;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.entity.EntityTypeTest;
 
 import java.util.function.BooleanSupplier;
 
 public class GameTestUtil {
+
+    public static final EntityTypeTest<Entity, ?> ANY_TYPE = new EntityTypeTest<>() {
+        public Entity tryCast(Entity entity) {
+            return entity;
+        }
+        public Class<? extends Entity> getBaseClass() {
+            return Entity.class;
+        }
+    };
+
+    public static final EntityTypeTest<Entity, ?> LIVING_ENTITY = EntityTypeTest.forClass(LivingEntity.class);
 
     /**
      * By using this method as the first line in a gametest, you will be able to use gametest blocks within those tests
@@ -58,15 +75,20 @@ public class GameTestUtil {
                 BlockEntity blockEntity = helper.getBlockEntity(blockPos);
                 if (blockEntity instanceof CheckStateBlockEntity checkStateBe) {
                     BlockPos checkPos = blockPos.relative(checkStateBe.getDirection());
-                    groupConditions.addCondition(checkStateBe, checkPos, changes.isFlipChecks());
+                    groupConditions.addCondition(checkStateBe, checkPos, changes == Config.GameTestChanges.FLIP_CHECKS);
                 }
             } else if (block == GameTestBlocks.TEST_TRIGGER_BLOCK) {
-                groupConditions.addTestTrigger(blockPos, changes.isFlipTriggers());
+                groupConditions.addTestTrigger(blockPos, changes == Config.GameTestChanges.FLIP_TRIGGERS);
             } else if (block == GameTestBlocks.GAMETEST_REDSTONE_BLOCK) {
                 helper.setBlock(blockPos, state.cycle(BlockStateProperties.POWERED));
             } else if (block == GameTestBlocks.ENTITY_INTERACTION_BLOCK) {
-                groupConditions.addEntityInteraction(blockPos, state.getValue(GameTestProperties.INTERACTION_TYPE), changes.isFlipTriggers());
+                groupConditions.addEntityInteraction(blockPos, state.getValue(GameTestProperties.INTERACTION_TYPE), changes == Config.GameTestChanges.FLIP_INTERACTIONS);
                 setBlock(helper, blockPos, state.setValue(GameTestProperties.INTERACTION_TYPE, EntityInteractionBlock.InteractionType.NONE), Block.UPDATE_INVISIBLE);
+            } else if (block == GameTestBlocks.ENTITY_INSIDE_BLOCK) {
+                EntityInsideBlock.EntityType entityType = state.getValue(GameTestProperties.ENTITY_TYPE);
+                groupConditions.addEntityInside(blockPos, entityType, changes == Config.GameTestChanges.FLIP_INSIDE);
+                Minecraft.getInstance().debugRenderer.gameTestDebugRenderer.addMarker(blockPos, 0xffffff77, entityType.getSerializedName(), Integer.MAX_VALUE);
+                setBlock(helper, blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_INVISIBLE);
             }
         });
         if (!groupConditions.getTestConditions().isEmpty()) {
