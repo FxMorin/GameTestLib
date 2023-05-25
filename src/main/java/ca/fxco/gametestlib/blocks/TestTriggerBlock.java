@@ -38,8 +38,10 @@ public class TestTriggerBlock extends Block implements GameMasterBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        blockState = blockState.cycle(INVERTED).setValue(POWERED, false);
-        level.setBlock(blockPos, blockState, 4);
+        if (player.canUseGameMasterBlocks()) {
+            blockState = blockState.cycle(INVERTED).setValue(POWERED, false);
+            level.setBlock(blockPos, blockState, 4);
+        }
         return InteractionResult.CONSUME;
     }
 

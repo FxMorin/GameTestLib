@@ -66,15 +66,17 @@ public class EntityInteractionBlock extends Block implements GameMasterBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (player.isShiftKeyDown()) {
-            if (blockHitResult.getDirection() == Direction.UP) {
-                level.setBlock(blockPos, blockState.cycle(TRIGGERED), Block.UPDATE_INVISIBLE);
+        if (player.canUseGameMasterBlocks()) {
+            if (player.isShiftKeyDown()) {
+                if (blockHitResult.getDirection() == Direction.UP) {
+                    level.setBlock(blockPos, blockState.cycle(TRIGGERED), Block.UPDATE_INVISIBLE);
+                } else {
+                    level.setBlock(blockPos, blockState.cycle(INVERTED), Block.UPDATE_INVISIBLE);
+                }
             } else {
-                level.setBlock(blockPos, blockState.cycle(INVERTED), Block.UPDATE_INVISIBLE);
+                int currentLevel = blockState.getValue(LEVEL);
+                level.setBlock(blockPos, blockState.setValue(LEVEL, currentLevel == 0 ? 15 : currentLevel - 1), Block.UPDATE_INVISIBLE);
             }
-        } else {
-            int currentLevel = blockState.getValue(LEVEL);
-            level.setBlock(blockPos, blockState.setValue(LEVEL, currentLevel == 0 ? 15 : currentLevel - 1), Block.UPDATE_INVISIBLE);
         }
         return InteractionResult.CONSUME;
     }

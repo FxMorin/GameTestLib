@@ -37,9 +37,11 @@ public class GameTestPoweredBlock extends PoweredBlock {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        blockState = blockState.cycle(POWERED);
-        level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
-        return InteractionResult.CONSUME;
+        if (player.canUseGameMasterBlocks()) {
+            blockState = blockState.cycle(POWERED);
+            level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
