@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * This class is used to set/control what GameTest uses for its internal systems,
- * such as: TestReporter, GameTestListener, and GameTestProgressBar (MultipleTestTracker maybe?)
+ * such as: TestReporter, GameTestListener, and GameTestProgressBar
  */
 public interface GameTestControl {
 

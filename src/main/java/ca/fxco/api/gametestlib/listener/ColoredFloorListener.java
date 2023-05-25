@@ -29,7 +29,7 @@ public class ColoredFloorListener implements GameTestListener {
         fillFloor(gameTestInfo, Blocks.RED_CONCRETE.defaultBlockState());
     }
 
-    private void fillFloor(GameTestInfo gameTestInfo, BlockState state) {
+    public void fillFloor(GameTestInfo gameTestInfo, BlockState state) {
         BoundingBox boundingBox = StructureUtils.getStructureBoundingBox(gameTestInfo.getStructureBlockEntity());
         int bottomY = boundingBox.minY() - 1;
         for (int x = boundingBox.minX(); x < boundingBox.maxX(); x++) {
