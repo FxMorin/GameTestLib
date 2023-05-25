@@ -1,6 +1,6 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.gametest.expansion.BlockStateSuggestions;
+import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetPulseStatePacket;
 import com.mojang.blaze3d.vertex.PoseStack;

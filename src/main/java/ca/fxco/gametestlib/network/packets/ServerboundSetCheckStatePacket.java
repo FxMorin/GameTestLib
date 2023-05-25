@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.network.packets;
 
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
-import ca.fxco.gametestlib.gametest.expansion.BlockStateExp;
+import ca.fxco.gametestlib.gametest.block.BlockStateExp;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

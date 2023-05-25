@@ -1,32 +1,25 @@
 package ca.fxco.gametestlib.blocks;
 
 import ca.fxco.gametestlib.Utils.EventCheckbox;
-import ca.fxco.gametestlib.base.GameTestBlocks;
-import ca.fxco.gametestlib.gametest.expansion.BlockStateExp;
-import ca.fxco.gametestlib.gametest.expansion.BlockStateSuggestions;
-import ca.fxco.gametestlib.mixin.gametest.GameTestDebugRendererAccessor;
+import ca.fxco.gametestlib.gametest.block.BlockStateExp;
+import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetCheckStatePacket;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.Map;
 
 public class CheckStateScreen extends Screen {
 

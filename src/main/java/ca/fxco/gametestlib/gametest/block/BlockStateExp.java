@@ -1,4 +1,4 @@
-package ca.fxco.gametestlib.gametest.expansion;
+package ca.fxco.gametestlib.gametest.block;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Holder;

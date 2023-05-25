@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.blocks;
 
 import ca.fxco.gametestlib.base.GameTestBlockEntities;
-import ca.fxco.gametestlib.gametest.expansion.BlockStateExp;
+import ca.fxco.gametestlib.gametest.block.BlockStateExp;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.api.EnvType;

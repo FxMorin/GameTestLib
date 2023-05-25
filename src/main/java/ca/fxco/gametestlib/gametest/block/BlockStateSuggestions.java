@@ -1,4 +1,4 @@
-package ca.fxco.gametestlib.gametest.expansion;
+package ca.fxco.gametestlib.gametest.block;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
