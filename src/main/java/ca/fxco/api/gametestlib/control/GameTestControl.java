@@ -1,7 +1,10 @@
 package ca.fxco.api.gametestlib.control;
 
 import ca.fxco.api.gametestlib.progressbar.GameTestProgressBar;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.gametest.framework.GameTestListener;
+import net.minecraft.gametest.framework.GameTestTicker;
 import net.minecraft.gametest.framework.TestReporter;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +20,7 @@ public interface GameTestControl {
         return List.of();
     }
 
-    default List<GameTestListener> registerGameTestListeners() {
+    default List<GameTestListenerFactory> registerGameTestListeners() {
         return List.of();
     }
 
@@ -27,5 +30,10 @@ public interface GameTestControl {
      */
     default @Nullable GameTestProgressBar registerGameTestProgressBar() {
         return null;
+    }
+
+    @FunctionalInterface
+    interface GameTestListenerFactory {
+        GameTestListener apply(GameTestInfo gameTestInfo, GameTestTicker gameTestTicker, BlockPos blockPos);
     }
 }
