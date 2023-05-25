@@ -1,5 +1,7 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
+import ca.fxco.api.gametestlib.gametest.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.TestGenerator;
 import lombok.Getter;
 
@@ -11,7 +13,7 @@ public class TestFunctionGenerator {
 
     private final Method method;
     private final SortedSet<String> values;
-    private final Map<String, Config.GameTestChanges> specialValues = new HashMap<>();
+    private final Map<String, GameTestChanges> specialValues = new HashMap<>();
     private final ParsedGameTestConfig gameTestConfig;
     private final TestGenerator.GameTestData.GameTestDataBuilder gameTestDataBuilder;
 

@@ -1,6 +1,5 @@
-package ca.fxco.gametestlib.gametest.block;
+package ca.fxco.api.gametestlib.gametest;
 
-import ca.fxco.gametestlib.gametest.expansion.Config;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public interface GameTestActionBlock {
     @Nullable
     default GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                   BlockPos blockPos, Config.GameTestChanges changes) {
+                                                                   BlockPos blockPos, GameTestChanges changes) {
         return null;
     }
 }

@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -60,7 +60,7 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock,
     @Nullable
     @Override
     public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+                                                                  BlockPos blockPos, GameTestChanges changes) {
         BlockEntity blockEntity = helper.getBlockEntity(blockPos);
         if (blockEntity instanceof PulseStateBlockEntity pulseStateBe) {
             helper.setBlock(blockPos, pulseStateBe.getFirstBlockState());

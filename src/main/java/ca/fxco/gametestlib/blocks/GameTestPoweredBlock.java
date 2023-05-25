@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,7 +67,7 @@ public class GameTestPoweredBlock extends PoweredBlock implements GameMasterBloc
     @Nullable
     @Override
     public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+                                                                  BlockPos blockPos, GameTestChanges changes) {
         helper.setBlock(blockPos, state.cycle(BlockStateProperties.POWERED));
         return null;
     }

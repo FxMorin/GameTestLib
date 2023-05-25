@@ -2,8 +2,8 @@ package ca.fxco.gametestlib.blocks;
 
 import ca.fxco.gametestlib.base.GameTestProperties;
 import ca.fxco.gametestlib.gametest.GameTestUtil;
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -111,12 +111,12 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
     @Nullable
     @Override
     public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+                                                                  BlockPos blockPos, GameTestChanges changes) {
         EntityInsideBlock.EntityType entityType = state.getValue(GameTestProperties.ENTITY_TYPE);
         EntityInsideCondition condition = new EntityInsideCondition(
                 blockPos,
                 entityType,
-                changes == Config.GameTestChanges.FLIP_INSIDE
+                changes.shouldFlip(GameTestChanges.FLIP_INSIDE)
         );
         Minecraft.getInstance().debugRenderer.gameTestDebugRenderer.addMarker(
                 blockPos,

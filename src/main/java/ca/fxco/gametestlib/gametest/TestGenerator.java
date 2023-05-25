@@ -1,10 +1,10 @@
 package ca.fxco.gametestlib.gametest;
 
 import ca.fxco.api.gametestlib.config.ParsedValue;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.Utils.Utils;
-import ca.fxco.gametestlib.gametest.expansion.Config;
-import ca.fxco.gametestlib.gametest.expansion.GameTestLib;
+import ca.fxco.api.gametestlib.gametest.GameTestLib;
 import ca.fxco.gametestlib.gametest.expansion.ParsedGameTestConfig;
 import ca.fxco.gametestlib.gametest.expansion.TestFunctionGenerator;
 import com.google.common.collect.Sets;
@@ -91,8 +91,8 @@ public class TestGenerator {
                                 generator.getMethod(),
                                 gameTestHelper -> {
                                     if (gameTestConfig.customBlocks()) {
-                                        Config.GameTestChanges changes = generator.getSpecialValues()
-                                                .getOrDefault(configName, Config.GameTestChanges.NONE);
+                                        GameTestChanges changes = generator.getSpecialValues()
+                                                .getOrDefault(configName, GameTestChanges.NONE);
                                         GameTestUtil.pistonLibGameTest(gameTestHelper, changes);
                                     }
                                     turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);

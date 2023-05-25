@@ -3,8 +3,8 @@ package ca.fxco.gametestlib.blocks;
 import ca.fxco.gametestlib.base.GameTestBlocks;
 import ca.fxco.gametestlib.base.GameTestProperties;
 import ca.fxco.gametestlib.gametest.GameTestUtil;
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import lombok.AllArgsConstructor;
 import net.minecraft.core.BlockPos;
@@ -146,11 +146,11 @@ public class EntityInteractionBlock extends Block implements GameMasterBlock, Ga
     @Nullable
     @Override
     public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
+                                                                  BlockPos blockPos, GameTestChanges changes) {
         EntityInteractionCondition condition = new EntityInteractionCondition(
                 blockPos,
                 state.getValue(GameTestProperties.INTERACTION_TYPE),
-                changes == Config.GameTestChanges.FLIP_INTERACTIONS
+                changes.shouldFlip(GameTestChanges.FLIP_INTERACTIONS)
         );
         GameTestUtil.setBlock(
                 helper,

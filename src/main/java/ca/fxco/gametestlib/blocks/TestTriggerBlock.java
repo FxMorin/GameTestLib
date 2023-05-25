@@ -1,8 +1,8 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.base.GameTestBlocks;
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -67,8 +67,8 @@ public class TestTriggerBlock extends Block implements GameMasterBlock, GameTest
 
     @Nullable
     public GameTestGroupConditions.TestCondition addTestCondition(GameTestHelper helper, BlockState state,
-                                                                  BlockPos blockPos, Config.GameTestChanges changes) {
-        return new TriggerTestCondition(blockPos, changes == Config.GameTestChanges.FLIP_TRIGGERS);
+                                                                  BlockPos blockPos, GameTestChanges changes) {
+        return new TriggerTestCondition(blockPos, changes.shouldFlip(GameTestChanges.FLIP_TRIGGERS));
     }
 
     public static class TriggerTestCondition extends GameTestGroupConditions.BasicTestCondition {

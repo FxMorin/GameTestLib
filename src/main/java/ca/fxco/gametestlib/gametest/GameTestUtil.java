@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.gametest;
 
-import ca.fxco.gametestlib.gametest.block.GameTestActionBlock;
-import ca.fxco.gametestlib.gametest.expansion.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
+import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.*;
@@ -20,7 +20,7 @@ public class GameTestUtil {
      * setting `customBlocks()` to false in the annotation)
      */
     public static void pistonLibGameTest(GameTestHelper helper) {
-        pistonLibGameTest(helper, Config.GameTestChanges.NONE);
+        pistonLibGameTest(helper, GameTestChanges.NONE);
     }
 
     /**
@@ -30,7 +30,7 @@ public class GameTestUtil {
      * automatically adds this logic! (If you really need to, you can disable the automatic addition of the method by
      * setting `customBlocks()` to false in the annotation)
      */
-    public static void pistonLibGameTest(GameTestHelper helper, Config.GameTestChanges changes) {
+    public static void pistonLibGameTest(GameTestHelper helper, GameTestChanges changes) {
         if (helper.getTick() != 0) { // Only run searching logic on the first tick
             return;
         }

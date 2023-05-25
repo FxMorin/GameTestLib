@@ -1,5 +1,7 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
+import ca.fxco.api.gametestlib.gametest.Config;
+import ca.fxco.api.gametestlib.gametest.GameTestLib;
 import lombok.AllArgsConstructor;
 
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package ca.fxco.gametestlib.gametest.expansion;
+package ca.fxco.api.gametestlib.gametest;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
