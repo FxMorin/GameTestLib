@@ -6,6 +6,7 @@ accessible class net/minecraft/client/renderer/debug/GameTestDebugRenderer$Marke
 # GameTest Structure
 accessible method net/minecraft/gametest/framework/StructureUtils tryLoadStructure (Ljava/nio/file/Path;)Lnet/minecraft/nbt/CompoundTag;
 accessible method net/minecraft/gametest/framework/StructureUtils getStructureTemplate (Ljava/lang/String;Lnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate;
+accessible method net/minecraft/gametest/framework/GameTestInfo getStructureBlockEntity ()Lnet/minecraft/world/level/block/entity/StructureBlockEntity;
 
 # GameTest Registry
 accessible field net/minecraft/gametest/framework/GameTestRegistry BEFORE_BATCH_FUNCTIONS Ljava/util/Map;
