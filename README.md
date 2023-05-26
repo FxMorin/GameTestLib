@@ -3,12 +3,17 @@
 
 ## TODO
 - Documentation
-- All block textures
-- Client-side block renderers (showing the block it checks, etc...)
+- Add missing textures to all blocks
 - Proper combination logic
-- Block for testing entities (with renderers)
 - Add a test mod to test GameTestLib (testception)
 - Add colored borders around batches on the ground (possibly around inner batches also)
+- Make structures save directly into your dev resources directory (loading works)
+- Make sure structures are only loaded from dev resources (to prevent loading old structure versions)
+- Testing Blocks for Shape & Block updates
+- POI testing blocks
+
+## Known Bugs
+- Generated resources don't seem to be getting loaded from the mod
 
 ## Features
 - Able to join the test server
