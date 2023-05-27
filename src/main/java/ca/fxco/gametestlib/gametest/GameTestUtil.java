@@ -19,8 +19,8 @@ public class GameTestUtil {
      * automatically adds this logic! (If you really need to, you can disable the automatic addition of the method by
      * setting `customBlocks()` to false in the annotation)
      */
-    public static void pistonLibGameTest(GameTestHelper helper) {
-        pistonLibGameTest(helper, GameTestChanges.NONE);
+    public static void initializeGameTestLib(GameTestHelper helper) {
+        initializeGameTestLib(helper, GameTestChanges.NONE);
     }
 
     /**
@@ -30,7 +30,7 @@ public class GameTestUtil {
      * automatically adds this logic! (If you really need to, you can disable the automatic addition of the method by
      * setting `customBlocks()` to false in the annotation)
      */
-    public static void pistonLibGameTest(GameTestHelper helper, GameTestChanges changes) {
+    public static void initializeGameTestLib(GameTestHelper helper, GameTestChanges changes) {
         if (helper.getTick() != 0) { // Only run searching logic on the first tick
             return;
         }

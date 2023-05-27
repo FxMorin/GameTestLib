@@ -93,7 +93,7 @@ public class TestGenerator {
                                     if (gameTestConfig.customBlocks()) {
                                         GameTestChanges changes = generator.getSpecialValues()
                                                 .getOrDefault(configName, GameTestChanges.NONE);
-                                        GameTestUtil.pistonLibGameTest(gameTestHelper, changes);
+                                        GameTestUtil.initializeGameTestLib(gameTestHelper, changes);
                                     }
                                     turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);
                                 },
