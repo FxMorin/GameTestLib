@@ -42,6 +42,10 @@ public class GameTestLibMod implements ModInitializer {
         if (!initialized) {
             initialized = true;
 
+            ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+                CURRENT_SERVER = server;
+            });
+
             GameTestBlocks.boostrap();
             GameTestItems.boostrap();
             GameTestBlockEntities.boostrap();
@@ -53,9 +57,6 @@ public class GameTestLibMod implements ModInitializer {
             CONTROLLER.initializeDefaults();
 
             EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
-            ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-                CURRENT_SERVER = server;
-            });
         }
     }
 

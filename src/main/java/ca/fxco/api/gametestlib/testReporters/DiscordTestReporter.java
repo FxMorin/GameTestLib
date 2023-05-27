@@ -170,7 +170,7 @@ public class DiscordTestReporter implements TestReporter {
         return String.format("%02d:%02d:%02d.%d", h, m, s, ms);
     }
 
-    enum SendRule {
+    public enum SendRule {
         NEVER,
         IF_REQUIRED,
         ALWAYS
