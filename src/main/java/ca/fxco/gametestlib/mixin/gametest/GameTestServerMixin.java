@@ -31,14 +31,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.function.BooleanSupplier;
 
 @Mixin(GameTestServer.class)
 public abstract class GameTestServerMixin extends MinecraftServer {
-
-    private static final Path DEV_RESOURCES = Path.of("..","..", "src", "main", "resources", "data", "pistonlib", "gametest", "structures");
 
     @Unique
     private boolean keepAlive = false;
@@ -57,7 +54,7 @@ public abstract class GameTestServerMixin extends MinecraftServer {
                                                    LevelStorageSource.LevelStorageAccess levelStorageAccess,
                                                    PackRepository packRepository, WorldStem worldStem,
                                                    Collection collection, BlockPos blockPos, CallbackInfo ci) {
-        StructureUtils.testStructuresDir = DEV_RESOURCES.toString();
+        StructureUtils.testStructuresDir = GameTestLibMod.DEV_RESOURCES.toString();
         System.out.println("New test structures dir: " + StructureUtils.testStructuresDir);
     }
 

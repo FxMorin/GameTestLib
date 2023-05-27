@@ -20,9 +20,13 @@ import net.minecraft.gametest.framework.MultipleTestTracker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 
+import java.nio.file.Path;
+
 public class GameTestLibMod implements ModInitializer {
 
     public static final String MOD_ID = "gametestlib";
+
+    public static Path DEV_RESOURCES;
 
     public static final boolean GAMETEST_ACTIVE = System.getProperty("fabric-api.gametest") != null;
     public static final boolean KEEPALIVE_ACTIVE = Boolean.parseBoolean(System.getProperty("gametestlib.keepAlive", "false"));
@@ -74,5 +78,13 @@ public class GameTestLibMod implements ModInitializer {
             return tracker != null && !tracker.isDone();
         }
         return false;
+    }
+
+    public static void setDevResources(Path path) {
+        DEV_RESOURCES = path;
+    }
+
+    public static void setDevResources(String modId) {
+        DEV_RESOURCES = Path.of("..","..", "src", "main", "resources", "data", modId, "gametest", "structures");
     }
 }
