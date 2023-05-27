@@ -16,6 +16,11 @@ import java.util.List;
  */
 public interface GameTestControl {
 
+    /**
+     * This is where dev resources should be set, in order for it to be loaded before anything is processed
+     */
+    default void onInitialize() {}
+
     default List<TestReporter> registerTestReporters() {
         return List.of();
     }
