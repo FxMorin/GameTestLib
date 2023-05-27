@@ -9,10 +9,7 @@ import ca.fxco.gametestlib.gametest.expansion.ParsedGameTestConfig;
 import ca.fxco.gametestlib.gametest.expansion.TestFunctionGenerator;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.Pair;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.gametest.framework.*;
@@ -205,7 +202,9 @@ public class TestGenerator {
                 }
             }
             if (!gotBatch) {
-                gameTestCalcBatches.add(new GameTestCalcBatch(new ArrayList<>(generator.getValues())));
+                GameTestCalcBatch newBatch = new GameTestCalcBatch();
+                newBatch.addGenerator(generator);
+                gameTestCalcBatches.add(newBatch);
             }
         }
         return gameTestCalcBatches;
@@ -332,11 +331,11 @@ public class TestGenerator {
     }
 
     @Getter
-    @RequiredArgsConstructor
+    @NoArgsConstructor
     public static class GameTestCalcBatch {
 
         private @Nullable String name = "";
-        private final List<String> values;
+        private final List<String> values = new ArrayList<>();
         private final List<TestFunctionGenerator> testFunctionGenerators = new ArrayList<>();
 
         public boolean hasName() {
