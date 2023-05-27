@@ -1,11 +1,13 @@
 package ca.fxco.gametestlib.blocks;
 
+import ca.fxco.gametestlib.Utils.EventCheckbox;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetPulseStatePacket;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -23,9 +25,12 @@ public class PulseStateScreen extends Screen {
     private EditBox firstStateEdit;
     private EditBox pulseStateEdit;
     private EditBox lastStateEdit;
+    private Checkbox disableFirstBlockUpdates;
     private BlockStateSuggestions blockStateSuggestionsFirst;
     private BlockStateSuggestions blockStateSuggestionsPulse;
     private BlockStateSuggestions blockStateSuggestionsLast;
+
+    private boolean initialDisableFirstBlockUpdates;
 
     public PulseStateScreen(PulseStateBlockEntity blockEntity) {
         super(Component.translatable("screen.gametestlib.pulse_state_block.title"));
@@ -39,6 +44,16 @@ public class PulseStateScreen extends Screen {
         this.firstStateEdit.tick();
         this.pulseStateEdit.tick();
         this.lastStateEdit.tick();
+    }
+
+    public void onCancel() {
+        this.blockEntity.setDisableFirstBlockUpdates(initialDisableFirstBlockUpdates);
+        this.minecraft.setScreen(null);
+    }
+
+    @Override
+    public void onClose() {
+        onCancel();
     }
 
     private void onDone() {
@@ -61,11 +76,13 @@ public class PulseStateScreen extends Screen {
 
     @Override
     protected void init() {
+        this.initialDisableFirstBlockUpdates = this.blockEntity.isDisableFirstBlockUpdates();
+
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> {
             this.onDone();
         }).bounds(this.width / 2 - 4 - 150, 210, 150, 20).build());
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
-            this.minecraft.setScreen(null);
+            this.onCancel();
         }).bounds(this.width / 2 + 4, 210, 150, 20).build());
 
         this.pulseDelayEdit = new EditBox(this.font, this.width / 2 - 150 - 4, 50, 150, 20, Component.translatable("screen.gametestlib.pulse_state_block.delay"));
@@ -76,7 +93,7 @@ public class PulseStateScreen extends Screen {
         this.pulseDurationEdit.setMaxLength(6);
         this.pulseDurationEdit.setValue("" + this.blockEntity.getDuration());
         this.addWidget(this.pulseDurationEdit);
-        this.firstStateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 308, 20, Component.translatable("screen.gametestlib.pulse_state_block.firstState"));
+        this.firstStateEdit = new EditBox(this.font, this.width / 2 - 154, 90, 280, 20, Component.translatable("screen.gametestlib.pulse_state_block.firstState"));
         this.firstStateEdit.setMaxLength(255);
         this.firstStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getFirstBlockState()));
         this.addWidget(this.firstStateEdit);
@@ -88,6 +105,10 @@ public class PulseStateScreen extends Screen {
         this.lastStateEdit.setMaxLength(255);
         this.lastStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getLastBlockState()));
         this.addWidget(this.lastStateEdit);
+
+        this.disableFirstBlockUpdates = new EventCheckbox(this.width / 2 + 134, 90, 20, 20, Component.empty(), this.blockEntity.isDisableFirstBlockUpdates(), this.blockEntity::setDisableFirstBlockUpdates);
+        this.addWidget(this.disableFirstBlockUpdates);
+
         this.setInitialFocus(this.pulseDelayEdit);
 
         this.blockStateSuggestionsFirst = new BlockStateSuggestions(this.minecraft, this, this.firstStateEdit, this.font, true, false, 0, 7, false, Integer.MIN_VALUE);
@@ -149,8 +170,10 @@ public class PulseStateScreen extends Screen {
         this.firstStateEdit.render(poseStack, i, j, f);
         drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
         this.pulseStateEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.lastState"), this.width / 2 - 153, 160, 10526880);
         this.lastStateEdit.render(poseStack, i, j, f);
+        Component comp = Component.translatable("screen.gametestlib.pulse_state_block.disableUpdate");
+        drawString(poseStack, this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
+        this.disableFirstBlockUpdates.render(poseStack, i, j, f);
 
         super.render(poseStack, i, j, f);
         this.blockStateSuggestionsFirst.render(poseStack, i, j);

@@ -25,6 +25,7 @@ public class PulseStateBlockEntity extends BlockEntity {
 
     private int delay;
     private int duration;
+    private boolean disableFirstBlockUpdates = false;
     private BlockState firstBlockState = Blocks.AIR.defaultBlockState();
     private BlockState pulseBlockState = Blocks.REDSTONE_BLOCK.defaultBlockState();
     private BlockState lastBlockState = Blocks.AIR.defaultBlockState();
@@ -53,6 +54,9 @@ public class PulseStateBlockEntity extends BlockEntity {
         super.saveAdditional(compoundTag);
         compoundTag.putInt("delay", delay);
         compoundTag.putInt("duration", duration);
+        if (disableFirstBlockUpdates) {
+            compoundTag.putBoolean("firstBlockUpdate", true);
+        }
         if (firstBlockState != null) {
             compoundTag.put("firstBS", NbtUtils.writeBlockState(firstBlockState));
         }
@@ -69,6 +73,7 @@ public class PulseStateBlockEntity extends BlockEntity {
         super.load(compoundTag);
         this.delay = compoundTag.getInt("delay");
         this.duration = compoundTag.getInt("duration");
+        this.disableFirstBlockUpdates = compoundTag.contains("firstBlockUpdate");
         HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
         if (compoundTag.contains("firstBS")) {
             this.firstBlockState = NbtUtils.readBlockState(holderLookup, compoundTag.getCompound("firstBS"));

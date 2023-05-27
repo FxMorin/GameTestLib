@@ -10,6 +10,7 @@
   "screen.gametestlib.pulse_state_block.firstState": "Initial State",
   "screen.gametestlib.pulse_state_block.pulseState": "Pulse State",
   "screen.gametestlib.pulse_state_block.lastState": "Final State",
+  "screen.gametestlib.pulse_state_block.disableUpdate": "Disable Updates",
   "screen.gametestlib.check_state_block.title": "Check State Block",
   "screen.gametestlib.check_state_block.tick": "On Tick",
   "screen.gametestlib.check_state_block.direction": "Direction",

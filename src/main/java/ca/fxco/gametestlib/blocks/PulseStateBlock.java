@@ -2,6 +2,7 @@ package ca.fxco.gametestlib.blocks;
 
 import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
+import ca.fxco.gametestlib.gametest.GameTestUtil;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -10,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GameMasterBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -63,7 +65,11 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock,
                                                                   BlockPos blockPos, GameTestChanges changes) {
         BlockEntity blockEntity = helper.getBlockEntity(blockPos);
         if (blockEntity instanceof PulseStateBlockEntity pulseStateBe) {
-            helper.setBlock(blockPos, pulseStateBe.getFirstBlockState());
+            if (pulseStateBe.isDisableFirstBlockUpdates()) {
+                GameTestUtil.setBlock(helper, blockPos, pulseStateBe.getFirstBlockState(), Block.UPDATE_INVISIBLE);
+            } else {
+                helper.setBlock(blockPos, pulseStateBe.getFirstBlockState());
+            }
             int delay = pulseStateBe.getDelay();
             int duration = pulseStateBe.getDuration();
             BlockPos blockPos2 = blockPos.immutable();
