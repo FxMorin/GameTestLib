@@ -71,17 +71,19 @@ public class TestGenerator {
         for (int i = 0; i < testingValues.length; i++) {
             String currentBatchId = batchId + "-" + configName + "-" + i;
             int finalI = i;
+            Consumer<ServerLevel> beforeBatchConsumer = GameTestRegistry.BEFORE_BATCH_FUNCTIONS.getOrDefault(batchId, null);
             GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
                 T value = testingValues[finalI];
                 parsedValue.setValue(value);
-                if (GameTestRegistry.BEFORE_BATCH_FUNCTIONS.containsKey(batchId)) {
-                    GameTestRegistry.BEFORE_BATCH_FUNCTIONS.get(batchId).accept(serverLevel);
+                if (beforeBatchConsumer != null) {
+                    beforeBatchConsumer.accept(serverLevel);
                 }
             });
+            Consumer<ServerLevel> afterBatchConsumer = GameTestRegistry.AFTER_BATCH_FUNCTIONS.getOrDefault(batchId, null);
             GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
                 parsedValue.setDefault();
-                if (GameTestRegistry.AFTER_BATCH_FUNCTIONS.containsKey(batchId)) {
-                    GameTestRegistry.AFTER_BATCH_FUNCTIONS.get(batchId).accept(serverLevel);
+                if (afterBatchConsumer != null) {
+                    afterBatchConsumer.accept(serverLevel);
                 }
             });
             for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
