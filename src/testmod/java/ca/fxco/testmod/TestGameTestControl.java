@@ -3,6 +3,7 @@ package ca.fxco.testmod;
 import ca.fxco.api.gametestlib.control.GameTestControl;
 import ca.fxco.api.gametestlib.listener.ColoredFloorListener;
 import ca.fxco.api.gametestlib.progressbar.GameTestProgressBar;
+import ca.fxco.api.gametestlib.progressbar.MapProgressBar;
 import ca.fxco.api.gametestlib.progressbar.MutableProgressBar;
 import ca.fxco.api.gametestlib.testReporters.DiscordTestReporter;
 import net.minecraft.gametest.framework.TestReporter;
@@ -28,7 +29,7 @@ public class TestGameTestControl implements GameTestControl {
     @Nullable
     @Override
     public GameTestProgressBar registerGameTestProgressBar() {
-        return new MutableProgressBar('{','}') {
+        return new MapProgressBar(){
             @Override
             public int getPriority() {
                 return 1010;
