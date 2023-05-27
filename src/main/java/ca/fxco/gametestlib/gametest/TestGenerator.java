@@ -35,7 +35,7 @@ public class TestGenerator {
 
     @GameTestGenerator
     public Collection<TestFunction> generateBatches() {
-        GameTestLibMod.initializeEntrypoints();
+        GameTestLibMod.initialize();
         List<TestFunction> simpleTestFunctions = new ArrayList<>();
         List<TestFunctionGenerator> testFunctionGenerators = new ArrayList<>();
 

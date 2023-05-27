@@ -35,18 +35,19 @@ public class GameTestLibMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        GameTestBlocks.boostrap();
-        GameTestItems.boostrap();
-        GameTestBlockEntities.boostrap();
-        GameTestCreativeModeTabs.bootstrap();
-        GameTestNetwork.initializeServer();
-
-        initializeEntrypoints();
+        initialize();
     }
 
-    public static void initializeEntrypoints() {
+    public static void initialize() {
         if (!initialized) {
             initialized = true;
+
+            GameTestBlocks.boostrap();
+            GameTestItems.boostrap();
+            GameTestBlockEntities.boostrap();
+            GameTestCreativeModeTabs.bootstrap();
+            GameTestNetwork.initializeServer();
+
             GlobalTestReporter.replaceWith(new MultiTestReporter());
             EntrypointUtils.invoke(MOD_ID + "-control", GameTestControl.class, CONTROLLER::loadControl);
             CONTROLLER.initializeDefaults();
