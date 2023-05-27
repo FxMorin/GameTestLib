@@ -5,7 +5,7 @@
 - Documentation
 - Add missing textures to all blocks
 - Proper combination logic
-- Add a test mod to test GameTestLib (testception)
+- Add loads of tests with different config types and settings to the test mod
 - Add colored borders around batches on the ground (possibly around inner batches also)
 - Make structures save directly into your dev resources directory (loading works)
 - Make sure structures are only loaded from dev resources (to prevent loading old structure versions)

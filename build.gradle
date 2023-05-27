@@ -6,9 +6,33 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+sourceSets {
+    main {
+        resources {
+            srcDir "src/generated/resources"
+        }
+    }
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += testmod.compileClasspath
+        runtimeClasspath += testmod.runtimeClasspath
+    }
+}
+
 loom {
     accessWidenerPath = file("src/main/resources/gametestlib.accesswidener")
     runs {
+        testmodServer {
+            server()
+            name = "Testmod Server"
+            vmArg "-Dfabric-api.gametest"
+            vmArg "-Dfabric-api.gametest.server=true"
+            vmArg "-Dfabric-api.gametest.command=true"
+            vmArg "-Dgametestlib.keepAlive=false"
+            source sourceSets.testmod
+            runDir "build/testmod"
+        }
         datagenClient {
             client()
             name "Data Generation"
@@ -57,14 +81,8 @@ dependencies {
 
     // MixinExtras
     include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_Version}")))
-}
 
-sourceSets {
-    main {
-        resources {
-            srcDir "src/generated/resources"
-        }
-    }
+    testmodImplementation sourceSets.main.output
 }
 
 processResources {

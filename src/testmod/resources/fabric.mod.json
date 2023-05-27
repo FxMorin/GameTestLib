@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "gametestlib-testmod",
+  "name": "GameTestLib Test Mod",
+  "version": "1.0-SNAPSHOT",
+  "environment": "*",
+  "license": "MIT",
+  "entrypoints": {
+    "main": [
+      "ca.fxco.testmod.GameTestLibTestMod"
+    ],
+    "gametestlib-gametest": [
+      "ca.fxco.testmod.testSuites.BasicTestSuite"
+    ],
+    "gametestlib-binders": [
+      "ca.fxco.api.gametestlib.config.binder.GameRuleConfigBinder"
+    ],
+    "gametestlib-control": [
+      "ca.fxco.testmod.TestGameTestControl"
+    ]
+  }
+}
