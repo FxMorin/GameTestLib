@@ -50,12 +50,16 @@ public class TestGenerator {
         for (TestGenerator.GameTestCalcBatch calcBatch : gameTestCalcBatches) {
             String batchId = calcBatch.hasName() ? calcBatch.getName() : "" + countBatch;
             // TODO: Add a way to try all combinations of options, instead of one at a time
-            for (String configName : calcBatch.getValues()) {
-                Optional<ParsedValue<?>> parsedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
-                if (parsedValueOpt.isEmpty()) {
-                    continue;
+            if (calcBatch.getValues().size() != 0) {
+                for (String configName : calcBatch.getValues()) {
+                    Optional<ParsedValue<?>> parsedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
+                    if (parsedValueOpt.isEmpty()) {
+                        continue;
+                    }
+                    generateValueTestFunctions(parsedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
                 }
-                generateValueTestFunctions(parsedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
+            } else {
+                generateSimpleTestFunctions(batchId, calcBatch, simpleTestFunctions);
             }
             countBatch++;
         }
@@ -103,6 +107,26 @@ public class TestGenerator {
                         )
                 );
             }
+        }
+    }
+
+    private <T> void generateSimpleTestFunctions(String batchId, TestGenerator.GameTestCalcBatch calcBatch,
+                                                 List<TestFunction> simpleTestFunctions) {
+        // Before/After batch already match ID
+        for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
+            ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
+            simpleTestFunctions.add(
+                    generateTestFunctionWithCustomData(
+                            generator.getMethod(),
+                            gameTestHelper -> {
+                                if (gameTestConfig.customBlocks()) {
+                                    GameTestUtil.initializeGameTestLib(gameTestHelper, GameTestChanges.NONE);
+                                }
+                                turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);
+                            },
+                            generator.getGameTestDataBuilder().batch(batchId).build()
+                    )
+            );
         }
     }
 
