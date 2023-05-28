@@ -30,9 +30,12 @@ public class TestGenerator {
 
     private static final Map<Class<?>, String> GAME_TEST_IDS = new HashMap<>();
 
+    public TestGenerator() {
+        GameTestLibMod.initialize();
+    }
+
     @GameTestGenerator
     public Collection<TestFunction> generateBatches() {
-        GameTestLibMod.initialize();
         List<TestFunction> simpleTestFunctions = new ArrayList<>();
         List<TestFunctionGenerator> testFunctionGenerators = new ArrayList<>();
 
