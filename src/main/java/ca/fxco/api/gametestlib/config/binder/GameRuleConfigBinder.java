@@ -18,11 +18,6 @@ public class GameRuleConfigBinder implements ConfigBinder {
                 parsedValues.put(key.getId(), new GameRuleParsedValue<>(key));
             }
         });
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            for (ParsedValue<?> value : parsedValues.values()) {
-                ((GameRuleParsedValue<?>)value).setOriginalValue(server);
-            }
-        });
         return parsedValues;
     }
 }

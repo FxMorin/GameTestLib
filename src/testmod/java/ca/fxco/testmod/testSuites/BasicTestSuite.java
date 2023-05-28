@@ -7,7 +7,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public class BasicTestSuite {
 
     // Make sure obsidian is still immovable
-    @GameTestLib
+    @GameTestLib("commandBlockOutput")
     @GameTest(timeoutTicks = 4)
     public void immovable(GameTestHelper helper) {}
 }
