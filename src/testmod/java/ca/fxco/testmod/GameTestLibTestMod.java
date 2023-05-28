@@ -1,9 +1,6 @@
 package ca.fxco.testmod;
 
-import ca.fxco.gametestlib.GameTestLibMod;
 import net.fabricmc.api.ModInitializer;
-
-import java.nio.file.Path;
 
 public class GameTestLibTestMod implements ModInitializer {
 

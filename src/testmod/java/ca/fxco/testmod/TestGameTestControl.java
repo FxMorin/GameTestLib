@@ -22,7 +22,8 @@ public class TestGameTestControl implements GameTestControl {
 
     @Override
     public List<TestReporter> registerTestReporters() {
-        return List.of(new DiscordTestReporter("TestMod", DiscordTestReporter.SendRule.ALWAYS, DiscordTestReporter.SendRule.ALWAYS, true, "https://discord.com/api/webhooks/1112095637668892782/rnGWvQMpcGEbCN3x9EYUUqsJiHnYg6PY9MlfHpEZSA_s3KNA46mN0j-x0i5JtfmjSSrt"));
+        //return List.of(new DiscordTestReporter("TestMod", DiscordTestReporter.SendRule.ALWAYS, DiscordTestReporter.SendRule.ALWAYS, true, "https://discord.com/api/webhooks/1112095637668892782/rnGWvQMpcGEbCN3x9EYUUqsJiHnYg6PY9MlfHpEZSA_s3KNA46mN0j-x0i5JtfmjSSrt"));
+        return List.of();
     }
 
     @Override

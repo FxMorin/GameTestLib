@@ -10,4 +10,9 @@ public class BasicTestSuite {
     @GameTestLib("commandBlockOutput")
     @GameTest(timeoutTicks = 4)
     public void immovable(GameTestHelper helper) {}
+
+    // Check if headless pistons can still break blocks
+    @GameTestLib("commandBlockOutput")
+    @GameTest(timeoutTicks = 4)
+    public void headlessPistonIllegalBreak(GameTestHelper helper) {}
 }
