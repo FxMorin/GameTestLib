@@ -22,7 +22,7 @@ public class GameTestController {
         this.testReporters.addAll(control.registerTestReporters());
         this.gameTestListeners.addAll(control.registerGameTestListeners());
         GameTestProgressBar newProgressBar = control.registerGameTestProgressBar();
-        if (newProgressBar != null && (this.progressBar == null || newProgressBar.getPriority() >= this.progressBar.getPriority())) {
+        if (newProgressBar != null && (this.progressBar == null || newProgressBar.getPriority() <= this.progressBar.getPriority())) {
             this.progressBar = newProgressBar;
         }
     }
