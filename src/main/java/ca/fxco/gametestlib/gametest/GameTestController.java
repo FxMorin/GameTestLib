@@ -19,6 +19,7 @@ public class GameTestController {
     private GameTestProgressBar progressBar;
 
     public void loadControl(GameTestControl control) {
+        control.onInitialize();
         this.testReporters.addAll(control.registerTestReporters());
         this.gameTestListeners.addAll(control.registerGameTestListeners());
         GameTestProgressBar newProgressBar = control.registerGameTestProgressBar();
