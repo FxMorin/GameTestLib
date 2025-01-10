@@ -1,6 +1,6 @@
 package ca.fxco.gametestlib.config;
 
-import ca.fxco.api.gametestlib.config.ParsedValue;
+import ca.fxco.api.gametestlib.config.ResolvedValue;
 import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.api.gametestlib.config.binder.ConfigBinder;
 import lombok.NoArgsConstructor;
@@ -19,13 +19,13 @@ public class ConfigManager {
 
     private static final Logger LOGGER = Logger.getLogger(GameTestLibMod.MOD_ID);
 
-    private final Map<String, ParsedValue<?>> values = new HashMap<>();
+    private final Map<String, ResolvedValue<?>> values = new HashMap<>();
 
     public void loadBinder(ConfigBinder binder) {
         this.values.putAll(binder.registerConfigValues());
     }
 
-    public Optional<ParsedValue<?>> get(String valueName) {
+    public Optional<ResolvedValue<?>> get(String valueName) {
         if (this.values.containsKey(valueName)) {
             return Optional.of(this.values.get(valueName));
         }

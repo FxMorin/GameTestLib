@@ -6,12 +6,12 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.minecraft.gametest.framework.GameTestServer;
 import net.minecraft.world.level.GameRules;
 
-public class GameRuleParsedValue<T extends GameRules.Value<T>> extends ParsedValue<String> {
+public class GameRuleResolvedValue<T extends GameRules.Value<T>> extends ResolvedValue<String> {
 
     private final GameRules.Key<T> key;
     private final T originalValue;
 
-    public GameRuleParsedValue(GameRules.Key<T> key) {
+    public GameRuleResolvedValue(GameRules.Key<T> key) {
         this.key = key;
         this.originalValue = GameTestServer.TEST_GAME_RULES.getRule(key);
     }

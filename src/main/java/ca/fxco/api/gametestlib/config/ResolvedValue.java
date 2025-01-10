@@ -4,7 +4,7 @@ package ca.fxco.api.gametestlib.config;
  * The format used to specify a parsed value.
  * Unlike the name, it does not need to be parsed. Heck the value does not even need to be here
  */
-public abstract class ParsedValue<T> {
+public abstract class ResolvedValue<T> {
 
     /**
      * @return An array of all values that should be attempted

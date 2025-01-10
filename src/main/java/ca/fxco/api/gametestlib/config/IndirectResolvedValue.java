@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @AllArgsConstructor
-public class IndirectParsedValue<T> extends ParsedValue<T> {
+public class IndirectResolvedValue<T> extends ResolvedValue<T> {
 
     private final Consumer<T> setValueConsumer;
     private final Runnable setDefaultConsumer;

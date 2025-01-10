@@ -1,6 +1,6 @@
 package ca.fxco.gametestlib.gametest;
 
-import ca.fxco.api.gametestlib.config.ParsedValue;
+import ca.fxco.api.gametestlib.config.ResolvedValue;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.Utils.Utils;
@@ -52,11 +52,11 @@ public class TestGenerator {
             // TODO: Add a way to try all combinations of options, instead of one at a time
             if (calcBatch.getValues().size() != 0) {
                 for (String configName : calcBatch.getValues()) {
-                    Optional<ParsedValue<?>> parsedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
-                    if (parsedValueOpt.isEmpty()) {
+                    Optional<ResolvedValue<?>> resolvedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
+                    if (resolvedValueOpt.isEmpty()) {
                         continue;
                     }
-                    generateValueTestFunctions(parsedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
+                    generateValueTestFunctions(resolvedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
                 }
             } else {
                 generateSimpleTestFunctions(batchId, calcBatch, simpleTestFunctions);
@@ -68,24 +68,24 @@ public class TestGenerator {
         return simpleTestFunctions;
     }
 
-    private <T> void generateValueTestFunctions(ParsedValue<T> parsedValue, String batchId, String configName,
+    private <T> void generateValueTestFunctions(ResolvedValue<T> resolvedValue, String batchId, String configName,
                                                 TestGenerator.GameTestCalcBatch calcBatch,
                                                 List<TestFunction> simpleTestFunctions) {
-        T[] testingValues = parsedValue.getTestingValues();
+        T[] testingValues = resolvedValue.getTestingValues();
         for (int i = 0; i < testingValues.length; i++) {
             String currentBatchId = batchId + "-" + configName + "-" + i;
             int finalI = i;
             Consumer<ServerLevel> beforeBatchConsumer = GameTestRegistry.BEFORE_BATCH_FUNCTIONS.getOrDefault(batchId, null);
             GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
                 T value = testingValues[finalI];
-                parsedValue.setValue(value);
+                resolvedValue.setValue(value);
                 if (beforeBatchConsumer != null) {
                     beforeBatchConsumer.accept(serverLevel);
                 }
             });
             Consumer<ServerLevel> afterBatchConsumer = GameTestRegistry.AFTER_BATCH_FUNCTIONS.getOrDefault(batchId, null);
             GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
-                parsedValue.setDefault();
+                resolvedValue.setDefault();
                 if (afterBatchConsumer != null) {
                     afterBatchConsumer.accept(serverLevel);
                 }

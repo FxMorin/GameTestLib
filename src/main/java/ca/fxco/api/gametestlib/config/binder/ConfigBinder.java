@@ -1,6 +1,6 @@
 package ca.fxco.api.gametestlib.config.binder;
 
-import ca.fxco.api.gametestlib.config.ParsedValue;
+import ca.fxco.api.gametestlib.config.ResolvedValue;
 
 import java.util.Map;
 
@@ -12,5 +12,5 @@ public interface ConfigBinder {
     /**
      * Register all the config values
      */
-    Map<String, ParsedValue<?>> registerConfigValues();
+    Map<String, ResolvedValue<?>> registerConfigValues();
 }
