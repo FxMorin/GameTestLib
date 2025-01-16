@@ -10,7 +10,7 @@ public @interface Config {
     /**
      * Strings must be a valid config field names
      */
-    String[] optionName();
+    String[] optionName() default {};
 
     /**
      * Allows you to set this value as ignored.

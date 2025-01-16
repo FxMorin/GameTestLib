@@ -4,6 +4,7 @@ import ca.fxco.api.gametestlib.gametest.Config;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.TestGenerator;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.logging.LogUtils;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
@@ -28,8 +29,9 @@ public class TestFunctionGenerator {
         for (Config config : gameTestConfig.config()) {
             this.values.addAll(List.of(config.optionName()));
             int i = 0;
-            for (String option : config.optionName()) {
-                this.specialValues.put(new Pair<>(option, gameTestConfig.value()[i]), config.changes());
+            String[] optionNames = config.optionName().length == 0 ? gameTestConfig.value() : config.optionName();
+            for (String option : optionNames) {
+                this.specialValues.put(new Pair<>(option, config.value()[i]), config.changes());
                 i++;
             }
         }
