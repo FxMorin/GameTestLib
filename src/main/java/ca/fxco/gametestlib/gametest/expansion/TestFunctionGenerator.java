@@ -1,8 +1,10 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
+import ca.fxco.api.gametestlib.config.ResolvedValue;
 import ca.fxco.api.gametestlib.gametest.Config;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.TestGenerator;
+import javafx.util.Pair;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
@@ -13,7 +15,7 @@ public class TestFunctionGenerator {
 
     private final Method method;
     private final SortedSet<String> values;
-    private final Map<String, GameTestChanges> specialValues = new HashMap<>();
+    private final Map<Pair<String, String>, GameTestChanges> specialValues = new HashMap<>();
     private final ParsedGameTestConfig gameTestConfig;
     private final TestGenerator.GameTestData.GameTestDataBuilder gameTestDataBuilder;
 
@@ -25,10 +27,17 @@ public class TestFunctionGenerator {
 
         this.values = new TreeSet<>(List.of(gameTestConfig.value()));
         for (Config config : gameTestConfig.config()) {
-            this.values.addAll(List.of(config.value()));
-            for (String value : config.value()) {
-                this.specialValues.put(value, config.changes());
+            this.values.addAll(List.of(config.optionName()));
+            int i = 0;
+            for (String option : config.optionName()) {
+                this.specialValues.put(new Pair<>(option, gameTestConfig.value()[i]), config.changes());
+                i++;
             }
         }
     }
+
+    public <T> GameTestChanges getChangesForOption(String optionName, T currentValue) {
+        return specialValues.getOrDefault(new Pair<>(optionName, currentValue.toString()), GameTestChanges.NONE);
+    }
+
 }

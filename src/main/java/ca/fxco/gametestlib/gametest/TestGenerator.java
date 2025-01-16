@@ -76,8 +76,8 @@ public class TestGenerator {
             String currentBatchId = batchId + "-" + configName + "-" + i;
             int finalI = i;
             Consumer<ServerLevel> beforeBatchConsumer = GameTestRegistry.BEFORE_BATCH_FUNCTIONS.getOrDefault(batchId, null);
+            T value = testingValues[finalI];
             GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
-                T value = testingValues[finalI];
                 resolvedValue.setValue(value);
                 if (beforeBatchConsumer != null) {
                     beforeBatchConsumer.accept(serverLevel);
@@ -97,8 +97,7 @@ public class TestGenerator {
                                 generator.getMethod(),
                                 gameTestHelper -> {
                                     if (gameTestConfig.customBlocks()) {
-                                        GameTestChanges changes = generator.getSpecialValues()
-                                                .getOrDefault(configName, GameTestChanges.NONE);
+                                        GameTestChanges changes = generator.getChangesForOption(configName, value);
                                         GameTestUtil.initializeGameTestLib(gameTestHelper, changes);
                                     }
                                     turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);

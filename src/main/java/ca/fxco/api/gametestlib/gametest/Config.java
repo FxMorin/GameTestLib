@@ -3,9 +3,14 @@ package ca.fxco.api.gametestlib.gametest;
 public @interface Config {
 
     /**
-     * Strings must be a valid config field names
+     * The string value of the option what should be matched
      */
     String[] value();
+
+    /**
+     * Strings must be a valid config field names
+     */
+    String[] optionName();
 
     /**
      * Allows you to set this value as ignored.
