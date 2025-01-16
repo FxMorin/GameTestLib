@@ -1,10 +1,9 @@
 package ca.fxco.gametestlib.gametest.expansion;
 
-import ca.fxco.api.gametestlib.config.ResolvedValue;
 import ca.fxco.api.gametestlib.gametest.Config;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.TestGenerator;
-import javafx.util.Pair;
+import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
