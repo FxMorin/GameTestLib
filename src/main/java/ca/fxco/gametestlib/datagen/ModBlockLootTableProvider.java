@@ -1,8 +1,9 @@
 package ca.fxco.gametestlib.datagen;
 
-import ca.fxco.gametestlib.base.GameTestBlocks;
+import ca.fxco.gametestlib.GameTestLibMod;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootTable;
 
@@ -17,11 +18,12 @@ public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
     public void generate() {
         LOGGER.info("Generating block loot tables...");
 
-        dropSelf(GameTestBlocks.PULSE_STATE_BLOCK);
-        dropSelf(GameTestBlocks.CHECK_STATE_BLOCK);
-        dropSelf(GameTestBlocks.TEST_TRIGGER_BLOCK);
-        dropSelf(GameTestBlocks.GAMETEST_REDSTONE_BLOCK);
-        dropSelf(GameTestBlocks.ENTITY_INTERACTION_BLOCK);
+        // Set dropSelf for all GameTestLib blocks
+        BuiltInRegistries.BLOCK.entrySet().forEach(entry -> {
+            if (entry.getKey().location().getNamespace().equals(GameTestLibMod.MOD_ID)) {
+                dropSelf(entry.getValue());
+            }
+        });
 
         LOGGER.info("Finished generating block loot tables!");
     }

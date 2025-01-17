@@ -1,8 +1,10 @@
 package ca.fxco.gametestlib.datagen;
 
+import ca.fxco.gametestlib.GameTestLibMod;
 import ca.fxco.gametestlib.base.GameTestBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.blockstates.MultiVariantGenerator;
@@ -25,16 +27,20 @@ public class ModModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockModelGenerators generator) {
+    public void generateBlockStateModels(BlockModelGenerators originalGenerator) {
         LOGGER.info("Generating blockstate definitions and models...");
-
-        generator.createTrivialCube(GameTestBlocks.PULSE_STATE_BLOCK);
-        generator.createTrivialCube(GameTestBlocks.CHECK_STATE_BLOCK);
+        GameTestBlockModelGenerators generator = new GameTestBlockModelGenerators(originalGenerator);
 
         registerInvertedBlock(generator, GameTestBlocks.TEST_TRIGGER_BLOCK);
         registerPoweredBlock(generator, GameTestBlocks.GAMETEST_REDSTONE_BLOCK);
 
-        generator.createTrivialCube(GameTestBlocks.ENTITY_INTERACTION_BLOCK); // TODO: Give it a proper model
+        // Set trivial cube for all blocks that haven't been set yet
+        BuiltInRegistries.BLOCK.entrySet().forEach(entry -> {
+            if (entry.getKey().location().getNamespace().equals(GameTestLibMod.MOD_ID) &&
+                    !GameTestBlockModelGenerators.PROCESSED_BLOCKS.contains(entry.getValue())) {
+                generator.createTrivialCube(entry.getValue());
+            }
+        });
 
     }
 
