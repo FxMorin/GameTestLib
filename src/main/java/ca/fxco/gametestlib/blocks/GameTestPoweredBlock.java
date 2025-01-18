@@ -55,11 +55,6 @@ public class GameTestPoweredBlock extends PoweredBlock implements GameMasterBloc
         builder.add(POWERED);
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
-    }
-
     //
     // GameTest Action Logic
     //

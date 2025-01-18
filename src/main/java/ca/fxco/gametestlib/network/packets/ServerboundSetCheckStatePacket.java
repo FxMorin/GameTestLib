@@ -48,7 +48,7 @@ public class ServerboundSetCheckStatePacket extends GameTestPacket {
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer fromPlayer, PacketSender packetSender) {
         if (fromPlayer.canUseGameMasterBlocks()) {
-            BlockEntity blockEntity = fromPlayer.level.getBlockEntity(this.blockPos);
+            BlockEntity blockEntity = fromPlayer.level().getBlockEntity(this.blockPos);
             if (blockEntity instanceof CheckStateBlockEntity checkStateBlockEntity) {
                 checkStateBlockEntity.setTick(this.tick);
                 checkStateBlockEntity.setFailOnFound(this.failOnFound);

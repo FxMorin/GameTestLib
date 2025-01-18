@@ -1,7 +1,6 @@
 package ca.fxco.gametestlib.gametest.block;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -9,7 +8,7 @@ import lombok.SneakyThrows;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -85,7 +84,6 @@ public class BlockStateSuggestions extends CommandSuggestions {
     }
 
     @SneakyThrows
-    @Override
     public final void fillNodeUsage(ChatFormatting chatFormatting) {
         String string = this.input.getValue();
         Suggestions suggestions = this.pendingSuggestions.get();
@@ -111,12 +109,12 @@ public class BlockStateSuggestions extends CommandSuggestions {
     }
 
     @Override
-    public void renderUsage(PoseStack poseStack) {
+    public void renderUsage(GuiGraphics guiGraphics) {
         for (FormattedCharSequence formattedCharSequence : this.commandUsage) {
             int j = this.input.getY() + this.input.getHeight();
             System.out.println(j);
-            GuiComponent.fill(poseStack, this.commandUsagePosition - 1, j, this.commandUsagePosition + this.commandUsageWidth + 1, j + 12, this.fillColor);
-            this.font.drawShadow(poseStack, formattedCharSequence, (float) this.commandUsagePosition, (float) (j + 2), -1);
+            guiGraphics.fill(this.commandUsagePosition - 1, j, this.commandUsagePosition + this.commandUsageWidth + 1, j + 12, this.fillColor);
+            guiGraphics.drawString(this.font, formattedCharSequence, this.commandUsagePosition, j + 2, -1);
         }
     }
 

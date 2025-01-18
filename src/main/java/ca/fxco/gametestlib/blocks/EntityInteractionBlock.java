@@ -134,11 +134,6 @@ public class EntityInteractionBlock extends Block implements GameMasterBlock, Ga
         builder.add(LEVEL, INVERTED, TRIGGERED);
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
-    }
-
     //
     // GameTest Action Logic
     //

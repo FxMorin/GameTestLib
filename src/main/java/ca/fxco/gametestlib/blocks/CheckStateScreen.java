@@ -5,8 +5,8 @@ import ca.fxco.gametestlib.gametest.block.BlockStateExp;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetCheckStatePacket;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
@@ -146,19 +146,19 @@ public class CheckStateScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        this.renderBackground(guiGraphics);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
 
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.tick"), this.width / 2 - 153, 40, 10526880);
-        this.tickEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.direction"), this.width / 2 + 4, 40, 10526880);
-        this.directionCycleButton.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.check_state_block.state"), this.width / 2 - 153, 80, 10526880);
-        this.stateEdit.render(poseStack, i, j, f);
-        this.failOnFoundCheckbox.render(poseStack, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.check_state_block.tick"), this.width / 2 - 153, 40, 10526880);
+        this.tickEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.check_state_block.direction"), this.width / 2 + 4, 40, 10526880);
+        this.directionCycleButton.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.check_state_block.state"), this.width / 2 - 153, 80, 10526880);
+        this.stateEdit.render(guiGraphics, i, j, f);
+        this.failOnFoundCheckbox.render(guiGraphics, i, j, f);
 
-        super.render(poseStack, i, j, f);
-        this.blockStateSuggestions.render(poseStack, i, j);
+        super.render(guiGraphics, i, j, f);
+        this.blockStateSuggestions.render(guiGraphics, i, j);
     }
 }

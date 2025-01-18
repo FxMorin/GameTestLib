@@ -4,8 +4,8 @@ import ca.fxco.gametestlib.Utils.EventCheckbox;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetPulseStatePacket;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
@@ -158,26 +158,26 @@ public class PulseStateScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        this.renderBackground(guiGraphics);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
 
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
-        this.pulseDelayEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
-        this.pulseDurationEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
-        this.firstStateEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
-        this.pulseStateEdit.render(poseStack, i, j, f);
-        this.lastStateEdit.render(poseStack, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
+        this.pulseDelayEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
+        this.pulseDurationEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
+        this.firstStateEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
+        this.pulseStateEdit.render(guiGraphics, i, j, f);
+        this.lastStateEdit.render(guiGraphics, i, j, f);
         Component comp = Component.translatable("screen.gametestlib.pulse_state_block.disableUpdate");
-        drawString(poseStack, this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
-        this.disableFirstBlockUpdates.render(poseStack, i, j, f);
+        guiGraphics.drawString(this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
+        this.disableFirstBlockUpdates.render(guiGraphics, i, j, f);
 
-        super.render(poseStack, i, j, f);
-        this.blockStateSuggestionsFirst.render(poseStack, i, j);
-        this.blockStateSuggestionsPulse.render(poseStack, i, j);
-        this.blockStateSuggestionsLast.render(poseStack, i, j);
+        super.render(guiGraphics, i, j, f);
+        this.blockStateSuggestionsFirst.render(guiGraphics, i, j);
+        this.blockStateSuggestionsPulse.render(guiGraphics, i, j);
+        this.blockStateSuggestionsLast.render(guiGraphics, i, j);
     }
 }

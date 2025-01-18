@@ -99,11 +99,6 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
         builder.add(DELAY, TYPE);
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
-    }
-
     //
     // GameTest Action Logic
     //

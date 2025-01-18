@@ -16,7 +16,6 @@ accessible field net/minecraft/gametest/framework/GameTestRegistry AFTER_BATCH_F
 accessible field net/minecraft/client/player/LocalPlayer minecraft Lnet/minecraft/client/Minecraft;
 accessible method net/minecraft/client/gui/components/CommandSuggestions getLastWordIndex (Ljava/lang/String;)I
 extendable method net/minecraft/client/gui/components/CommandSuggestions updateUsageInfo ()V
-extendable method net/minecraft/client/gui/components/CommandSuggestions fillNodeUsage (Lnet/minecraft/ChatFormatting;)V
 accessible field net/minecraft/client/gui/components/CommandSuggestions minecraft Lnet/minecraft/client/Minecraft;
 accessible field net/minecraft/client/gui/components/CommandSuggestions input Lnet/minecraft/client/gui/components/EditBox;
 accessible field net/minecraft/client/gui/components/CommandSuggestions currentParse Lcom/mojang/brigadier/ParseResults;

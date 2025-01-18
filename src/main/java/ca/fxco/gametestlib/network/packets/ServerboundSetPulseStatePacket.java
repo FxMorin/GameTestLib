@@ -76,7 +76,7 @@ public class ServerboundSetPulseStatePacket extends GameTestPacket {
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer fromPlayer, PacketSender packetSender) {
         if (fromPlayer.canUseGameMasterBlocks()) {
-            BlockEntity blockEntity = fromPlayer.level.getBlockEntity(this.blockPos);
+            BlockEntity blockEntity = fromPlayer.level().getBlockEntity(this.blockPos);
             if (blockEntity instanceof PulseStateBlockEntity pulseStateBlockEntity) {
                 pulseStateBlockEntity.setDelay(this.delay);
                 pulseStateBlockEntity.setDuration(this.duration);
