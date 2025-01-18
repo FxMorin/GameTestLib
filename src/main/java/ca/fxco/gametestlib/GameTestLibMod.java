@@ -13,7 +13,7 @@ import ca.fxco.gametestlib.mixin.gametest.GameTestServerAccessor;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.gametest.framework.GameTestServer;
 import net.minecraft.gametest.framework.GlobalTestReporter;
 import net.minecraft.gametest.framework.MultipleTestTracker;
@@ -57,10 +57,10 @@ public class GameTestLibMod implements ModInitializer {
             GameTestNetwork.initializeServer();
 
             GlobalTestReporter.replaceWith(new MultiTestReporter());
-            EntrypointUtils.invoke(MOD_ID + "-control", GameTestControl.class, CONTROLLER::loadControl);
+            FabricLoader.getInstance().invokeEntrypoints(MOD_ID + "-control", GameTestControl.class, CONTROLLER::loadControl);
             CONTROLLER.initializeDefaults();
 
-            EntrypointUtils.invoke(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
+            FabricLoader.getInstance().invokeEntrypoints(MOD_ID + "-binders", ConfigBinder.class, CONFIG_MANAGER::loadBinder);
         }
     }
 

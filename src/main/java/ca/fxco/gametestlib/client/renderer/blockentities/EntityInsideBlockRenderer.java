@@ -7,6 +7,7 @@ import ca.fxco.gametestlib.blocks.EntityInsideBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -36,7 +37,7 @@ public class EntityInsideBlockRenderer<T extends EntityInsideBlockEntity> implem
             double x = (double)blockPos.getX() + 1;
             double y = (double)blockPos.getY() + 2.4;
             double z = (double)blockPos.getZ() + 1;
-            RenderUtils.renderFloatingText(poseStack, entityType, x, y, z, -1, 0.025F, true, 0.0F, true, 16);
+            RenderUtils.renderFloatingText(poseStack, entityType, x, y, z, -1, 0.025F, true, 0.0F, Font.DisplayMode.SEE_THROUGH, 16);
         }
     }
 }

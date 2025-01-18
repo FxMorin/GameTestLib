@@ -63,7 +63,7 @@ public class RenderUtils {
     }
 
     // TODO: This is definitely just temporary until we switch to the new debug renderers in 1.20
-    public static void renderFloatingText(PoseStack pose, String text, double x, double y, double z, int color,
+    /*public static void renderFloatingText(PoseStack pose, String text, double x, double y, double z, int color,
                                           float scale, boolean centered, float offsetX, boolean throughWalls) {
         PoseStack poseStack2 = RenderSystem.getModelViewStack();
         poseStack2.pushPose();
@@ -72,12 +72,12 @@ public class RenderUtils {
         DebugRenderer.renderFloatingText(text, x, y, z, color, scale, centered, offsetX, throughWalls);
         poseStack2.popPose();
         RenderSystem.applyModelViewMatrix();
-    }
+    }*/
 
     // TODO: This is definitely just temporary until we switch to the new debug renderers in 1.20
     public static void renderFloatingText(PoseStack pose, String text, double x, double y, double z,
                                           int color, float scale, boolean centered, float offsetX,
-                                          boolean throughWalls, double maxDist) {
+                                          Font.DisplayMode displayMode, double maxDist) {
         Minecraft minecraft = Minecraft.getInstance();
         Camera camera = minecraft.gameRenderer.getMainCamera();
         if (camera.isInitialized() && minecraft.getEntityRenderDispatcher().options != null &&
@@ -86,7 +86,7 @@ public class RenderUtils {
             poseStack2.pushPose();
             poseStack2.mulPoseMatrix(pose.last().pose());
             RenderSystem.applyModelViewMatrix();
-            renderDebugFloatingText(camera, minecraft.font, text, x, y, z, color, scale, centered, offsetX, throughWalls);
+            renderDebugFloatingText(camera, minecraft.font, text, x, y, z, color, scale, centered, offsetX, displayMode);
             poseStack2.popPose();
             RenderSystem.applyModelViewMatrix();
         }
@@ -94,7 +94,7 @@ public class RenderUtils {
 
     private static void renderDebugFloatingText(Camera camera, Font font, String text,
                                                 double x, double y, double z, int color, float scale,
-                                                boolean centered, float offsetX, boolean throughWalls) {
+                                                boolean centered, float offsetX, Font.DisplayMode displayMode) {
         double x2 = camera.getPosition().x;
         double y2 = camera.getPosition().y;
         double z2 = camera.getPosition().z;
@@ -103,8 +103,7 @@ public class RenderUtils {
         poseStack.translate((float)(x - x2), (float)(y - y2) + 0.07F, (float)(z - z2));
         poseStack.mulPoseMatrix(new Matrix4f().rotation(camera.rotation()));
         poseStack.scale(scale, -scale, scale);
-        RenderSystem.enableTexture();
-        if (throughWalls) {
+        if (displayMode == Font.DisplayMode.SEE_THROUGH) {
             RenderSystem.disableDepthTest();
         } else {
             RenderSystem.enableDepthTest();
@@ -115,7 +114,7 @@ public class RenderUtils {
         float m = centered ? (float)(-font.width(text)) / 2.0F : 0.0F;
         m -= offsetX / scale;
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        font.drawInBatch(text, m, 0.0F, color, false, Transformation.identity().getMatrix(), bufferSource, throughWalls, 0, 15728880);
+        font.drawInBatch(text, m, 0.0F, color, false, Transformation.identity().getMatrix(), bufferSource, displayMode, 0, 15728880);
         bufferSource.endBatch();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableDepthTest();

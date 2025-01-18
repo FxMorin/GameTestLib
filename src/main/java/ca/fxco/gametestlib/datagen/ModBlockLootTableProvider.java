@@ -27,12 +27,4 @@ public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         LOGGER.info("Finished generating block loot tables!");
     }
-
-    // FabricLootTableProvider#accept needs to be overriden because
-    // we're using Mojmaps. BlockLootSubProvider#generate is called
-    // accept in Yarn and thus would provide that implementation.
-    @Override
-    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> t) {
-        this.generate(t);
-    }
 }

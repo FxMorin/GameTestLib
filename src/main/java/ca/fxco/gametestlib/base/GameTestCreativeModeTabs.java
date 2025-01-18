@@ -10,7 +10,7 @@ public class GameTestCreativeModeTabs {
 
     public static final CreativeModeTab GENERAL = FabricItemGroup.builder(id("main"))
             .icon(() -> new ItemStack(GameTestBlocks.GAMETEST_REDSTONE_BLOCK))
-            .displayItems((featureFlags, output, hasPermissions) -> {
+            .displayItems((displayParameters, output) -> {
                 output.accept(GameTestItems.GAMETEST_REDSTONE_BLOCK);
                 output.accept(GameTestItems.TEST_TRIGGER_BLOCK);
                 output.accept(GameTestItems.PULSE_STATE_BLOCK);
