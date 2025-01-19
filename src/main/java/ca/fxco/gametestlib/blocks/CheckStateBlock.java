@@ -3,6 +3,7 @@ package ca.fxco.gametestlib.blocks;
 import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import com.mojang.serialization.MapCodec;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -20,8 +21,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
+    public static final MapCodec<CheckStateBlock> CODEC = simpleCodec(CheckStateBlock::new);
+
     public CheckStateBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

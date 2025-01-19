@@ -1,6 +1,5 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.Utils.EventCheckbox;
 import ca.fxco.gametestlib.gametest.block.BlockStateExp;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
@@ -99,7 +98,11 @@ public class CheckStateScreen extends Screen {
         this.stateEdit.setMaxLength(255);
         this.stateEdit.setValue(this.blockEntity.getBlockStateExp().asString());
         this.addWidget(this.stateEdit);
-        this.failOnFoundCheckbox = new EventCheckbox(this.width / 2 - 154, 130, 100, 20, Component.translatable("screen.gametestlib.check_state_block.failOnFind"), this.blockEntity.isFailOnFound(), this.blockEntity::setFailOnFound);
+        this.failOnFoundCheckbox = Checkbox.builder(
+                Component.translatable("screen.gametestlib.check_state_block.failOnFind"), minecraft.font)
+                .selected(this.blockEntity.isFailOnFound()).pos(this.width / 2 - 154, 130)
+                .onValueChange((checkbox, value) -> this.blockEntity.setFailOnFound(value))
+                .build();
         this.addWidget(this.failOnFoundCheckbox);
 
         this.setInitialFocus(this.stateEdit);

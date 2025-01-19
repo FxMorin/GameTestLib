@@ -1,6 +1,5 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.Utils.EventCheckbox;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetPulseStatePacket;
@@ -97,7 +96,10 @@ public class PulseStateScreen extends Screen {
         this.lastStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getLastBlockState()));
         this.addWidget(this.lastStateEdit);
 
-        this.disableFirstBlockUpdates = new EventCheckbox(this.width / 2 + 134, 90, 20, 20, Component.empty(), this.blockEntity.isDisableFirstBlockUpdates(), this.blockEntity::setDisableFirstBlockUpdates);
+        this.disableFirstBlockUpdates = Checkbox.builder(Component.empty(), minecraft.font).pos(this.width / 2 + 134, 90)
+                .selected(this.blockEntity.isDisableFirstBlockUpdates())
+                .onValueChange((checkbox, value) -> this.blockEntity.setDisableFirstBlockUpdates(value))
+                .build();
         this.addWidget(this.disableFirstBlockUpdates);
 
         this.setInitialFocus(this.pulseDelayEdit);

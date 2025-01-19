@@ -10,16 +10,18 @@ import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Optional;
 
-import static net.minecraft.gametest.framework.StructureUtils.getStructureTemplate;
-
 @Mixin(StructureBlockEntity.class)
 public abstract class StructureBlockEntityMixin extends BlockEntity {
+
+    @Shadow @Nullable protected abstract StructureTemplate getStructureTemplate(ServerLevel serverLevel);
 
     public StructureBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -28,7 +30,7 @@ public abstract class StructureBlockEntityMixin extends BlockEntity {
     @Redirect(
             method = {
                     "isStructureLoadable",
-                    "loadStructure(Lnet/minecraft/server/level/ServerLevel;Z)Z",
+                    "placeStructureIfSameSize",
             },
             at = @At(
                     value = "INVOKE",
@@ -40,7 +42,7 @@ public abstract class StructureBlockEntityMixin extends BlockEntity {
                                                               ResourceLocation resourceLocation) {
         if (GameTestLibMod.GAMETEST_ACTIVE && this.getLevel() instanceof ServerLevel serverLevel) {
             try {
-                return Optional.of(getStructureTemplate(resourceLocation.getPath(), serverLevel));
+                return Optional.of(getStructureTemplate(serverLevel));
             } catch (RuntimeException re) {
                 re.printStackTrace();
             }

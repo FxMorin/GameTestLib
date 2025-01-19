@@ -5,6 +5,7 @@ import ca.fxco.gametestlib.gametest.GameTestUtil;
 import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import com.mojang.serialization.MapCodec;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,8 @@ import java.util.List;
 
 public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
+    public static final MapCodec<EntityInsideBlock> CODEC = simpleCodec(EntityInsideBlock::new);
+
     public static final EntityTypeTest<Entity, ?> ANY_TYPE = new EntityTypeTest<>() {
         public Entity tryCast(Entity entity) {
             return entity;
@@ -60,6 +63,11 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
                 .setValue(DELAY, 0)
                 .setValue(TYPE, EntityType.ALL)
         );
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Nullable

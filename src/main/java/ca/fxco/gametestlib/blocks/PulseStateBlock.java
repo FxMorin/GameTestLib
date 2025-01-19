@@ -4,16 +4,14 @@ import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.GameTestUtil;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.GameMasterBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -21,8 +19,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
+    public static final MapCodec<PulseStateBlock> CODEC = simpleCodec(PulseStateBlock::new);
+
     public PulseStateBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
