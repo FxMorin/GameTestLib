@@ -37,15 +37,6 @@ public class PulseStateScreen extends Screen {
         this.blockEntity = blockEntity;
     }
 
-    @Override
-    public void tick() {
-        this.pulseDelayEdit.tick();
-        this.pulseDurationEdit.tick();
-        this.firstStateEdit.tick();
-        this.pulseStateEdit.tick();
-        this.lastStateEdit.tick();
-    }
-
     public void onCancel() {
         this.blockEntity.setDisableFirstBlockUpdates(initialDisableFirstBlockUpdates);
         this.minecraft.setScreen(null);
@@ -144,9 +135,9 @@ public class PulseStateScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
+    public boolean mouseScrolled(double d, double e, double f, double g) {
         return this.blockStateSuggestionsFirst.mouseScrolled(f) || this.blockStateSuggestionsPulse.mouseScrolled(f) ||
-                this.blockStateSuggestionsLast.mouseScrolled(f) || super.mouseScrolled(d, e, f);
+                this.blockStateSuggestionsLast.mouseScrolled(f) || super.mouseScrolled(d, e, f, g);
     }
 
     @Override
@@ -159,7 +150,7 @@ public class PulseStateScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, i, j, f);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
 
         guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
@@ -175,7 +166,6 @@ public class PulseStateScreen extends Screen {
         guiGraphics.drawString(this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
         this.disableFirstBlockUpdates.render(guiGraphics, i, j, f);
 
-        super.render(guiGraphics, i, j, f);
         this.blockStateSuggestionsFirst.render(guiGraphics, i, j);
         this.blockStateSuggestionsPulse.render(guiGraphics, i, j);
         this.blockStateSuggestionsLast.render(guiGraphics, i, j);

@@ -38,12 +38,6 @@ public class CheckStateScreen extends Screen {
         this.blockEntity = blockEntity;
     }
 
-    @Override
-    public void tick() {
-        this.tickEdit.tick();
-        this.stateEdit.tick();
-    }
-
     private void onDone() {
         Direction newDirection = this.blockEntity.getDirection();
         HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
@@ -131,8 +125,8 @@ public class CheckStateScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
-        return this.blockStateSuggestions.mouseScrolled(f) || super.mouseScrolled(d, e, f);
+    public boolean mouseScrolled(double d, double e, double f, double g) {
+        return this.blockStateSuggestions.mouseScrolled(f) || super.mouseScrolled(d, e, f, g);
     }
 
     @Override
@@ -147,7 +141,7 @@ public class CheckStateScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, i, j, f);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
 
         guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.check_state_block.tick"), this.width / 2 - 153, 40, 10526880);
@@ -158,7 +152,6 @@ public class CheckStateScreen extends Screen {
         this.stateEdit.render(guiGraphics, i, j, f);
         this.failOnFoundCheckbox.render(guiGraphics, i, j, f);
 
-        super.render(guiGraphics, i, j, f);
         this.blockStateSuggestions.render(guiGraphics, i, j);
     }
 }
