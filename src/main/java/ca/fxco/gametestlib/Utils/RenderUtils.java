@@ -1,16 +1,7 @@
 package ca.fxco.gametestlib.Utils;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Transformation;
 import lombok.experimental.UtilityClass;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.Direction;
 import org.joml.Matrix4f;
 
@@ -60,65 +51,5 @@ public class RenderUtils {
         vertexConsumer.vertex(matrix4f, g, h, k).color(color).endVertex();
         vertexConsumer.vertex(matrix4f, g, i, l).color(color).endVertex();
         vertexConsumer.vertex(matrix4f, f, i, m).color(color).endVertex();
-    }
-
-    // TODO: This is definitely just temporary until we switch to the new debug renderers in 1.20
-    /*public static void renderFloatingText(PoseStack pose, String text, double x, double y, double z, int color,
-                                          float scale, boolean centered, float offsetX, boolean throughWalls) {
-        PoseStack poseStack2 = RenderSystem.getModelViewStack();
-        poseStack2.pushPose();
-        poseStack2.mulPoseMatrix(pose.last().pose());
-        RenderSystem.applyModelViewMatrix();
-        DebugRenderer.renderFloatingText(text, x, y, z, color, scale, centered, offsetX, throughWalls);
-        poseStack2.popPose();
-        RenderSystem.applyModelViewMatrix();
-    }*/
-
-    // TODO: This is definitely just temporary until we switch to the new debug renderers in 1.20
-    public static void renderFloatingText(PoseStack pose, String text, double x, double y, double z,
-                                          int color, float scale, boolean centered, float offsetX,
-                                          Font.DisplayMode displayMode, double maxDist) {
-        Minecraft minecraft = Minecraft.getInstance();
-        Camera camera = minecraft.gameRenderer.getMainCamera();
-        if (camera.isInitialized() && minecraft.getEntityRenderDispatcher().options != null &&
-                camera.getPosition().distanceToSqr(x, y, z) < maxDist * maxDist) {
-            PoseStack poseStack2 = RenderSystem.getModelViewStack();
-            poseStack2.pushPose();
-            poseStack2.mulPoseMatrix(pose.last().pose());
-            RenderSystem.applyModelViewMatrix();
-            renderDebugFloatingText(camera, minecraft.font, text, x, y, z, color, scale, centered, offsetX, displayMode);
-            poseStack2.popPose();
-            RenderSystem.applyModelViewMatrix();
-        }
-    }
-
-    private static void renderDebugFloatingText(Camera camera, Font font, String text,
-                                                double x, double y, double z, int color, float scale,
-                                                boolean centered, float offsetX, Font.DisplayMode displayMode) {
-        double x2 = camera.getPosition().x;
-        double y2 = camera.getPosition().y;
-        double z2 = camera.getPosition().z;
-        PoseStack poseStack = RenderSystem.getModelViewStack();
-        poseStack.pushPose();
-        poseStack.translate((float)(x - x2), (float)(y - y2) + 0.07F, (float)(z - z2));
-        poseStack.mulPoseMatrix(new Matrix4f().rotation(camera.rotation()));
-        poseStack.scale(scale, -scale, scale);
-        if (displayMode == Font.DisplayMode.SEE_THROUGH) {
-            RenderSystem.disableDepthTest();
-        } else {
-            RenderSystem.enableDepthTest();
-        }
-        RenderSystem.depthMask(true);
-        poseStack.scale(-1.0F, 1.0F, 1.0F);
-        RenderSystem.applyModelViewMatrix();
-        float m = centered ? (float)(-font.width(text)) / 2.0F : 0.0F;
-        m -= offsetX / scale;
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        font.drawInBatch(text, m, 0.0F, color, false, Transformation.identity().getMatrix(), bufferSource, displayMode, 0, 15728880);
-        bufferSource.endBatch();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableDepthTest();
-        poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
     }
 }

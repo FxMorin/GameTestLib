@@ -6,11 +6,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,8 +48,8 @@ public class CheckStateBlockRenderer<T extends CheckStateBlockEntity> implements
                 double x = (double) sidePos.getX() + 1;
                 double y = (double) sidePos.getY() + 2.4;
                 double z = (double) sidePos.getZ() + 1;
-                RenderUtils.renderFloatingText(poseStack, "[" + tick + "]", x, y, z, -1,
-                        0.025F, true, 0.0F, Font.DisplayMode.SEE_THROUGH, 16);
+                DebugRenderer.renderFloatingText(poseStack, multiBufferSource, "[" + tick + "]", x, y, z, -1,
+                        0.025F, true, 0.0F, true);
             }
         }
     }
