@@ -1,6 +1,7 @@
 package ca.fxco.gametestlib.network.packets;
 
 import ca.fxco.gametestlib.blocks.PulseStateBlockEntity;
+import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.fabricmc.api.EnvType;
@@ -11,67 +12,48 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-@AllArgsConstructor
-@NoArgsConstructor
-public class ServerboundSetPulseStatePacket extends GameTestPacket {
+import static ca.fxco.gametestlib.GameTestLibMod.id;
 
-    private BlockPos blockPos;
-    private int delay;
-    private int duration;
-    private BlockState firstBlockState;
-    private BlockState pulseBlockState;
-    private BlockState lastBlockState;
-    
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeBlockPos(blockPos);
-        buf.writeVarInt(delay);
-        buf.writeVarInt(duration);
-        byte set = 0;
-        if (firstBlockState != null) {
-            set |= (1L << 0);
-        }
-        if (pulseBlockState != null) {
-            set |= (1L << 1);
-        }
-        if (lastBlockState != null) {
-            set |= (1L << 2);
-        }
-        buf.writeByte(set);
-        if (firstBlockState != null) {
-            buf.writeNbt(NbtUtils.writeBlockState(firstBlockState));
-        }
-        if (pulseBlockState != null) {
-            buf.writeNbt(NbtUtils.writeBlockState(pulseBlockState));
-        }
-        if (lastBlockState != null) {
-            buf.writeNbt(NbtUtils.writeBlockState(lastBlockState));
-        }
-    }
+public record ServerboundSetPulseStatePacket(
+        BlockPos blockPos,
+        int delay,
+        int duration,
+        BlockState firstBlockState,
+        BlockState pulseBlockState,
+        BlockState lastBlockState
+) implements GameTestPacket {
 
-    @Override
-    public void read(FriendlyByteBuf buf) {
-        HolderGetter<Block> holderGetter = BuiltInRegistries.BLOCK.asLookup();
-        this.blockPos = buf.readBlockPos();
-        this.delay = buf.readVarInt();
-        this.duration = buf.readVarInt();
-        byte set = buf.readByte();
-        if ((set & (1L << 0)) != 0) {
-            this.firstBlockState = NbtUtils.readBlockState(holderGetter, buf.readNbt());
-        }
-        if ((set & (1L << 1)) != 0) {
-            this.pulseBlockState = NbtUtils.readBlockState(holderGetter, buf.readNbt());
-        }
-        if ((set & (1L << 2)) != 0) {
-            this.lastBlockState = NbtUtils.readBlockState(holderGetter, buf.readNbt());
-        }
-    }
+    private static final StreamCodec<ByteBuf, BlockState> BLOCKSTATE_STREAM_CODEC =
+            ByteBufCodecs.fromCodec(BlockState.CODEC);
+
+    public static final StreamCodec<FriendlyByteBuf, ServerboundSetPulseStatePacket> STREAM_CODEC =
+            StreamCodec.composite(
+                    BlockPos.STREAM_CODEC,
+                    ServerboundSetPulseStatePacket::blockPos,
+                    ByteBufCodecs.INT,
+                    ServerboundSetPulseStatePacket::delay,
+                    ByteBufCodecs.INT,
+                    ServerboundSetPulseStatePacket::duration,
+                    BLOCKSTATE_STREAM_CODEC,
+                    ServerboundSetPulseStatePacket::firstBlockState,
+                    BLOCKSTATE_STREAM_CODEC,
+                    ServerboundSetPulseStatePacket::pulseBlockState,
+                    BLOCKSTATE_STREAM_CODEC,
+                    ServerboundSetPulseStatePacket::lastBlockState,
+                    ServerboundSetPulseStatePacket::new
+            );
+
+    public static final CustomPacketPayload.Type<ServerboundSetPulseStatePacket> TYPE =
+            new CustomPacketPayload.Type<>(id("pulse_state_block"));
 
     @Override
     public void handleServer(MinecraftServer server, ServerPlayer fromPlayer, PacketSender packetSender) {
@@ -89,5 +71,10 @@ public class ServerboundSetPulseStatePacket extends GameTestPacket {
                 pulseStateBlockEntity.setChanged();
             }
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

@@ -1,5 +1,6 @@
 package ca.fxco.gametestlib.gametest.block;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -7,6 +8,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -18,6 +22,9 @@ import java.util.Optional;
 
 // BlockState Expression
 public abstract class BlockStateExp {
+
+    public static final StreamCodec<ByteBuf, BlockStateExp> STREAM_CODEC = ByteBufCodecs.COMPOUND_TAG
+            .map(BlockStateExp::read, BlockStateExp::write);
 
     public static final BlockStateExp EMPTY = BlockStateExp.of(Blocks.AIR);
 

@@ -50,8 +50,8 @@ public class PulseStateBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
         compoundTag.putInt("delay", delay);
         compoundTag.putInt("duration", duration);
         if (disableFirstBlockUpdates) {
@@ -69,8 +69,8 @@ public class PulseStateBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
+    public void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
         this.delay = compoundTag.getInt("delay");
         this.duration = compoundTag.getInt("duration");
         this.disableFirstBlockUpdates = compoundTag.contains("firstBlockUpdate");
@@ -92,7 +92,7 @@ public class PulseStateBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return this.saveWithoutMetadata(provider);
     }
 }

@@ -36,8 +36,8 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock,
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
-                                 InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos,
+                                               Player player, BlockHitResult blockHitResult) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof PulseStateBlockEntity pulseStateBlockEntity) {
             if (level.isClientSide) {

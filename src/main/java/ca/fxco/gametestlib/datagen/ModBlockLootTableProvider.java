@@ -3,15 +3,17 @@ package ca.fxco.gametestlib.datagen;
 import ca.fxco.gametestlib.GameTestLibMod;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootTable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected ModBlockLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput);
+    protected ModBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(dataOutput, lookup);
     }
 
     @Override
