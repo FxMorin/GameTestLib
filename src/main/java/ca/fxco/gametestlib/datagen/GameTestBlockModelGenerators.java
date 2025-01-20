@@ -1,7 +1,7 @@
 package ca.fxco.gametestlib.datagen;
 
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.blockstates.BlockStateGenerator;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.blockstates.BlockStateGenerator;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ public class GameTestBlockModelGenerators extends BlockModelGenerators {
     public GameTestBlockModelGenerators(BlockModelGenerators generators) {
         super(
                 wrapGeneratorConsumer(generators.blockStateOutput),
-                generators.modelOutput,
-                generators.skippedAutoModelsOutput
+                generators.itemModelOutput,
+                generators.modelOutput
         );
         PROCESSED_BLOCKS.clear();
     }
