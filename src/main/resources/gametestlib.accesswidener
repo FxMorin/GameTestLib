@@ -36,6 +36,3 @@ accessible method net/minecraft/client/gui/components/CommandSuggestions$Suggest
 accessible field net/minecraft/world/level/GameRules GAME_RULE_TYPES Ljava/util/Map;
 accessible method net/minecraft/world/level/GameRules$Value deserialize (Ljava/lang/String;)V
 accessible field net/minecraft/gametest/framework/GameTestServer TEST_GAME_RULES Lnet/minecraft/world/level/GameRules;
-
-# BlockModelGenerators
-accessible field net/minecraft/data/models/BlockModelGenerators skippedAutoModelsOutput Ljava/util/function/Consumer;
