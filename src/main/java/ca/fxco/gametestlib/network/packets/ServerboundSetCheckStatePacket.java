@@ -2,13 +2,9 @@ package ca.fxco.gametestlib.network.packets;
 
 import ca.fxco.gametestlib.blocks.CheckStateBlockEntity;
 import ca.fxco.gametestlib.gametest.block.BlockStateExp;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

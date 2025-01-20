@@ -8,7 +8,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -45,7 +44,7 @@ public abstract class BlockStateExp {
                     return EMPTY;
                 }
                 HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
-                ResourceLocation resourceLocation = new ResourceLocation(compoundTag.getString("Name"));
+                ResourceLocation resourceLocation = ResourceLocation.parse(compoundTag.getString("Name"));
                 Optional<? extends Holder<Block>> optional = holderLookup.get(ResourceKey.create(Registries.BLOCK, resourceLocation));
                 if (optional.isEmpty()) {
                     return EMPTY;

@@ -47,9 +47,9 @@ public class RenderUtils {
 
     public static void renderFace(Matrix4f matrix4f, VertexConsumer vertexConsumer, int color,
                                   float f, float g, float h, float i, float j, float k, float l, float m) {
-        vertexConsumer.vertex(matrix4f, f, h, j).color(color).endVertex();
-        vertexConsumer.vertex(matrix4f, g, h, k).color(color).endVertex();
-        vertexConsumer.vertex(matrix4f, g, i, l).color(color).endVertex();
-        vertexConsumer.vertex(matrix4f, f, i, m).color(color).endVertex();
+        vertexConsumer.addVertex(matrix4f, f, h, j).setColor(color);
+        vertexConsumer.addVertex(matrix4f, g, h, k).setColor(color);
+        vertexConsumer.addVertex(matrix4f, g, i, l).setColor(color);
+        vertexConsumer.addVertex(matrix4f, f, i, m).setColor(color);
     }
 }

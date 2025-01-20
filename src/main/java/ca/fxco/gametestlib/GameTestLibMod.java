@@ -65,7 +65,7 @@ public class GameTestLibMod implements ModInitializer {
     }
 
     public static ResourceLocation id(String location) {
-        return new ResourceLocation(MOD_ID, location);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, location);
     }
 
     public static void switchServer(MinecraftServer server) {
