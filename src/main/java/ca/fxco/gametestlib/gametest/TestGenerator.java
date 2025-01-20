@@ -345,7 +345,7 @@ public class TestGenerator {
         public void addGenerator(TestFunctionGenerator generator) {
             var config = generator.getGameTestConfig();
             this.requiredValues.addAll(config.requiredValues());
-            this.invertedValues.addAll(config.requiredValues());
+            this.invertedValues.addAll(config.invertedValues());
             this.variants.addAll(config.variants());
             this.testFunctionGenerators.add(generator);
             if (this.name != null) {
@@ -372,14 +372,16 @@ public class TestGenerator {
             for (String variant : parsedConfig.variants()) {
                 // If a variant is required or inverted, check if the test values allow that
                 if (this.requiredValues.contains(variant)) {
-                    if (isVariantConfigInvalid(generator.getGameTestConfig(), variant, true)) {
+                    if (isVariantConfigInvalid(parsedConfig, variant, true)) {
                         return false;
                     }
-                } else if (this.invertedValues.contains(variant)) {
-                    if (isVariantConfigInvalid(generator.getGameTestConfig(), variant, false)) {
+                }
+                if (this.invertedValues.contains(variant)) {
+                    if (isVariantConfigInvalid(parsedConfig, variant, false)) {
                         return false;
                     }
-                } else if (this.variants.contains(variant)) {
+                }
+                if (this.variants.contains(variant)) {
                     // Compare config's
                     for (TestFunctionGenerator gen : testFunctionGenerators) {
                         if (areVariantConfigsIncompatible(gen.getGameTestConfig(), parsedConfig, variant)) {
