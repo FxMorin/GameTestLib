@@ -17,9 +17,13 @@ public @interface GameTestLib {
 
     /**
      * Required config fields, these config fields are enabled before running the test.
-     * If {@link #inverted}, these config
      */
     String[] value() default {};
+
+    /**
+     * Inverted config fields, these config fields are disabled before running the test.
+     */
+    String[] inverted() default {};
 
     /**
      * Variants are normal config fields.
@@ -32,11 +36,6 @@ public @interface GameTestLib {
      * Pass config annotations to specify how variants should work
      */
     Config[] config() default {};
-
-    /**
-     * If config fields from {@link #value} should be inverted
-     */
-    boolean inverted() default false;
 
     /**
      * If the custom gametest blocks should be used for this test

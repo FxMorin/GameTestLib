@@ -24,22 +24,17 @@ public record ParsedGameTestConfig(Set<String> requiredValues, Set<String> inver
         configs.addAll(List.of(gameTestLib.config()));
 
         Set<String> requiredValues;
-        Set<String> invertedValues;
-        if (gameTestLib.inverted()) {
-            requiredValues = this.requiredValues;
-            if (gameTestLib.value().length > 0) {
-                invertedValues = new HashSet<>(this.invertedValues);
-                invertedValues.addAll(List.of(gameTestLib.value()));
-            } else {
-                invertedValues = this.invertedValues;
-            }
+        if (gameTestLib.value().length > 0) {
+            requiredValues = new HashSet<>(this.requiredValues);
+            requiredValues.addAll(List.of(gameTestLib.value()));
         } else {
-            if (gameTestLib.value().length > 0) {
-                requiredValues = new HashSet<>(this.invertedValues);
-                requiredValues.addAll(List.of(gameTestLib.value()));
-            } else {
-                requiredValues = this.requiredValues;
-            }
+            requiredValues = this.requiredValues;
+        }
+        Set<String> invertedValues;
+        if (gameTestLib.inverted().length > 0) {
+            invertedValues = new HashSet<>(this.invertedValues);
+            invertedValues.addAll(List.of(gameTestLib.inverted()));
+        } else {
             invertedValues = this.invertedValues;
         }
         return new ParsedGameTestConfig(
@@ -53,8 +48,8 @@ public record ParsedGameTestConfig(Set<String> requiredValues, Set<String> inver
 
     public static ParsedGameTestConfig of(GameTestLib gameTestLib) {
         return new ParsedGameTestConfig(
-                gameTestLib.inverted() ? Set.of() : Set.of(gameTestLib.value()),
-                gameTestLib.inverted() ? Set.of(gameTestLib.value()) : Set.of(),
+                Set.of(gameTestLib.value()),
+                Set.of(gameTestLib.inverted()),
                 Set.of(gameTestLib.variants()),
                 gameTestLib.config(),
                 gameTestLib.customBlocks()
