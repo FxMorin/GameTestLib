@@ -5,33 +5,41 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation can be used on either classes or fields within a gametest config class.
+ * When applied to the class, it's applied to all fields within that class.
+ *
+ * @author FX
+ */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GameTestLib {
 
     /**
-     * If the custom gametest blocks should be used for this test
-     */
-    boolean customBlocks() default true;
-
-    /**
-     * All strings must be a valid config field name. These fields will be cycled through to make sure they also pass
+     * Required config fields, these config fields are enabled before running the test.
+     * If {@link #inverted}, these config
      */
     String[] value() default {};
 
     /**
-     * For more control over how config options pass & fail. You can use @Config to specify the new result
+     * Variants are normal config fields.
+     * However, instead of being required, they test all the variants of the option.
+     * All strings must be a valid config field name.
+     */
+    String[] variants() default {};
+
+    /**
+     * Pass config annotations to specify how variants should work
      */
     Config[] config() default {};
 
     /**
-     * If config options should be ignored
+     * If config fields from {@link #value} should be inverted
      */
-    boolean ignored() default false;
+    boolean inverted() default false;
 
     /**
-     * Only run if all the config options are present.
-     * If ignored, none of the config options must be present
+     * If the custom gametest blocks should be used for this test
      */
-    boolean combined() default false;
+    boolean customBlocks() default true;
 }

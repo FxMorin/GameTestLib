@@ -1,9 +1,9 @@
 package ca.fxco.gametestlib.gametest;
 
 import ca.fxco.api.gametestlib.config.ResolvedValue;
+import ca.fxco.api.gametestlib.gametest.Config;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.GameTestLibMod;
-import ca.fxco.gametestlib.Utils.Utils;
 import ca.fxco.api.gametestlib.gametest.GameTestLib;
 import ca.fxco.gametestlib.gametest.expansion.ParsedGameTestConfig;
 import ca.fxco.gametestlib.gametest.expansion.TestFunctionGenerator;
@@ -49,17 +49,29 @@ public class TestGenerator {
         int countBatch = 0;
         for (TestGenerator.GameTestCalcBatch calcBatch : gameTestCalcBatches) {
             String batchId = calcBatch.hasName() ? calcBatch.getName() : "" + countBatch;
-            // TODO: Add a way to try all combinations of options, instead of one at a time
-            if (calcBatch.getValues().size() != 0) {
-                for (String configName : calcBatch.getValues()) {
-                    Optional<ResolvedValue<?>> resolvedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(configName);
+            var requiredResolved = getResolvedValues(calcBatch.requiredValues);
+            var invertedResolved = getResolvedValues(calcBatch.invertedValues);
+            Runnable beforeBatch = () -> {
+                //noinspection unchecked
+                requiredResolved.forEach(v -> v.setValue(true));
+                //noinspection unchecked
+                invertedResolved.forEach(v -> v.setValue(false));
+            };
+            Runnable afterBatch = () -> {
+                requiredResolved.forEach(ResolvedValue::setDefault);
+                invertedResolved.forEach(ResolvedValue::setDefault);
+            };
+            if (!calcBatch.getVariants().isEmpty()) {
+                for (String variant : calcBatch.getVariants()) {
+                    Optional<ResolvedValue<?>> resolvedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(variant);
                     if (resolvedValueOpt.isEmpty()) {
                         continue;
                     }
-                    generateValueTestFunctions(resolvedValueOpt.get(), batchId, configName, calcBatch, simpleTestFunctions);
+                    generateValueTestFunctions(resolvedValueOpt.get(), beforeBatch, afterBatch, batchId, variant,
+                            calcBatch, simpleTestFunctions);
                 }
             } else {
-                generateSimpleTestFunctions(batchId, calcBatch, simpleTestFunctions);
+                generateSimpleTestFunctions(batchId, beforeBatch, afterBatch, calcBatch, simpleTestFunctions);
             }
             countBatch++;
         }
@@ -68,23 +80,40 @@ public class TestGenerator {
         return simpleTestFunctions;
     }
 
-    private <T> void generateValueTestFunctions(ResolvedValue<T> resolvedValue, String batchId, String configName,
+    @SuppressWarnings("rawtypes")
+    private List<ResolvedValue> getResolvedValues(Set<String> value) {
+        List<ResolvedValue> resolvedValues = new ArrayList<>();
+        for (String name : value) {
+            Optional<ResolvedValue<?>> resolvedValueOpt = GameTestLibMod.CONFIG_MANAGER.get(name);
+            if (resolvedValueOpt.isEmpty()) {
+                continue;
+            }
+            resolvedValues.add(resolvedValueOpt.get());
+        }
+        return resolvedValues;
+    }
+
+    private <T> void generateValueTestFunctions(ResolvedValue<T> resolvedValue, Runnable beforeBatch,
+                                                Runnable afterBatch, String batchId, String variant,
                                                 TestGenerator.GameTestCalcBatch calcBatch,
                                                 List<TestFunction> simpleTestFunctions) {
         T[] testingValues = resolvedValue.getTestingValues();
         for (int i = 0; i < testingValues.length; i++) {
-            String currentBatchId = batchId + "-" + configName + "-" + i;
-            int finalI = i;
-            Consumer<ServerLevel> beforeBatchConsumer = GameTestRegistry.BEFORE_BATCH_FUNCTIONS.getOrDefault(batchId, null);
-            T value = testingValues[finalI];
+            String currentBatchId = batchId + "-" + variant + "-" + i;
+            Consumer<ServerLevel> beforeBatchConsumer = GameTestRegistry.BEFORE_BATCH_FUNCTIONS
+                    .getOrDefault(batchId, null);
+            T value = testingValues[i];
             GameTestRegistry.BEFORE_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
+                beforeBatch.run();
                 resolvedValue.setValue(value);
                 if (beforeBatchConsumer != null) {
                     beforeBatchConsumer.accept(serverLevel);
                 }
             });
-            Consumer<ServerLevel> afterBatchConsumer = GameTestRegistry.AFTER_BATCH_FUNCTIONS.getOrDefault(batchId, null);
+            Consumer<ServerLevel> afterBatchConsumer = GameTestRegistry.AFTER_BATCH_FUNCTIONS
+                    .getOrDefault(batchId, null);
             GameTestRegistry.AFTER_BATCH_FUNCTIONS.put(currentBatchId, serverLevel -> {
+                afterBatch.run();
                 resolvedValue.setDefault();
                 if (afterBatchConsumer != null) {
                     afterBatchConsumer.accept(serverLevel);
@@ -97,7 +126,7 @@ public class TestGenerator {
                                 generator.getMethod(),
                                 gameTestHelper -> {
                                     if (gameTestConfig.customBlocks()) {
-                                        GameTestChanges changes = generator.getChangesForOption(configName, value);
+                                        GameTestChanges changes = generator.getChangesForOption(variant, value);
                                         GameTestUtil.initializeGameTestLib(gameTestHelper, changes);
                                     }
                                     turnMethodIntoConsumer(generator.getMethod()).accept(gameTestHelper);
@@ -109,9 +138,20 @@ public class TestGenerator {
         }
     }
 
-    private <T> void generateSimpleTestFunctions(String batchId, TestGenerator.GameTestCalcBatch calcBatch,
+    private <T> void generateSimpleTestFunctions(String batchId, Runnable beforeBatch, Runnable afterBatch,
+                                                 TestGenerator.GameTestCalcBatch calcBatch,
                                                  List<TestFunction> simpleTestFunctions) {
-        // Before/After batch already match ID
+        // Before/After batch already match ID, so you only need to add your after and before batch
+        GameTestRegistry.BEFORE_BATCH_FUNCTIONS.compute(batchId, (k, v) ->
+                v == null ? s -> beforeBatch.run() : s -> {
+            beforeBatch.run();
+            v.accept(s);
+        });
+        GameTestRegistry.AFTER_BATCH_FUNCTIONS.compute(batchId, (k, v) ->
+                v == null ? s -> afterBatch.run() : s -> {
+                    afterBatch.run();
+                    v.accept(s);
+                });
         for (TestFunctionGenerator generator : calcBatch.testFunctionGenerators) {
             ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
             simpleTestFunctions.add(
@@ -151,56 +191,12 @@ public class TestGenerator {
     public static List<TestGenerator.GameTestCalcBatch> checkAllCombinations(List<TestFunctionGenerator> testFunctionGenerators) {
         List<GameTestCalcBatch> gameTestCalcBatches = new ArrayList<>();
         for (TestFunctionGenerator generator : testFunctionGenerators) {
-            ParsedGameTestConfig gameTestConfig = generator.getGameTestConfig();
             boolean gotBatch = false;
-            if (gameTestConfig.ignored()) {
-                if (gameTestConfig.combined()) {
-                    for (GameTestCalcBatch batch : new ArrayList<>(gameTestCalcBatches)) {
-                        if (Utils.containsAny(generator.getValues(), batch.getValues()) &&
-                                batch.canAcceptGenerator(generator)) {
-                            batch.addGenerator(generator);
-                            gotBatch = true;
-                            break;
-                        }
-                    }
-                } else {
-                    for (GameTestCalcBatch batch : new ArrayList<>(gameTestCalcBatches)) {
-                        if (generator.getValues().containsAll(batch.getValues()) &&
-                                batch.canAcceptGenerator(generator)) {
-                            batch.addGenerator(generator);
-                            gotBatch = true;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                if (gameTestConfig.combined()) {
-                    for (GameTestCalcBatch batch : new ArrayList<>(gameTestCalcBatches)) {
-                        List<String> differences = new ArrayList<>(Sets.difference(Sets.newHashSet(batch.getValues()), Sets.newHashSet(generator.getValues())));
-                        if (differences.size() == 0 && batch.canAcceptGenerator(generator)) {
-                            batch.addGenerator(generator);
-                            gotBatch = true;
-                            break;
-                        }
-                    }
-                } else {
-                    for (GameTestCalcBatch batch : new ArrayList<>(gameTestCalcBatches)) {
-                        for (String str : generator.getValues()) {
-                            if (batch.getValues().contains(str)) {
-                                if (batch.canAcceptGenerator(generator)) {
-                                    batch.addGenerator(generator);
-                                    gotBatch = true;
-                                }
-                                break;
-                            }
-                        }
-                        List<String> differences = new ArrayList<>(Sets.difference(Sets.newHashSet(batch.getValues()), Sets.newHashSet(generator.getValues())));
-                        if (differences.size() == 0 && batch.canAcceptGenerator(generator)) {
-                            batch.addGenerator(generator);
-                            gotBatch = true;
-                            break;
-                        }
-                    }
+            for (GameTestCalcBatch batch : gameTestCalcBatches) {
+                if (batch.canAcceptGenerator(generator)) {
+                    batch.addGenerator(generator);
+                    gotBatch = true;
+                    break;
                 }
             }
             if (!gotBatch) {
@@ -224,7 +220,7 @@ public class TestGenerator {
                 if (m.isAnnotationPresent(GameTestLib.class)) {
                     ParsedGameTestConfig gameTestConfig;
                     if (classConfig != null) {
-                        gameTestConfig = classConfig.createMerged(m.getAnnotation(GameTestLib.class), true);
+                        gameTestConfig = classConfig.createChild(m.getAnnotation(GameTestLib.class));
                     } else {
                         gameTestConfig = ParsedGameTestConfig.of(m.getAnnotation(GameTestLib.class));
                     }
@@ -337,7 +333,9 @@ public class TestGenerator {
     public static class GameTestCalcBatch {
 
         private @Nullable String name = "";
-        private final List<String> values = new ArrayList<>();
+        private final Set<String> requiredValues = new HashSet<>();
+        private final Set<String> invertedValues = new HashSet<>();
+        private final Set<String> variants = new HashSet<>();
         private final List<TestFunctionGenerator> testFunctionGenerators = new ArrayList<>();
 
         public boolean hasName() {
@@ -345,8 +343,10 @@ public class TestGenerator {
         }
 
         public void addGenerator(TestFunctionGenerator generator) {
-            Set<String> difference = Sets.difference(Sets.newHashSet(generator.getValues()), Sets.newHashSet(this.getValues()));
-            this.values.addAll(difference);
+            var config = generator.getGameTestConfig();
+            this.requiredValues.addAll(config.requiredValues());
+            this.invertedValues.addAll(config.requiredValues());
+            this.variants.addAll(config.variants());
             this.testFunctionGenerators.add(generator);
             if (this.name != null) {
                 if (this.name.isEmpty()) {
@@ -358,23 +358,77 @@ public class TestGenerator {
         }
 
         public boolean canAcceptGenerator(TestFunctionGenerator generator) {
-            Set<String> difference = Sets.difference(Sets.newHashSet(generator.getValues()), Sets.newHashSet(this.getValues()));
-            for (TestFunctionGenerator gen : testFunctionGenerators) {
-                ParsedGameTestConfig gameTestConfig = gen.getGameTestConfig();
-                if (gameTestConfig.ignored()) {
-                    if (gameTestConfig.combined()) {
-                        for (String val : gen.getValues()) {
-                            if (difference.contains(val)) {
-                                return false;
-                            }
-                        }
-                    } else if (difference.containsAll(gen.getValues())) {
+            var parsedConfig = generator.getGameTestConfig();
+            for (String inverted : parsedConfig.invertedValues()) {
+                if (this.requiredValues.contains(inverted)) {
+                    return false;
+                }
+            }
+            for (String required : parsedConfig.requiredValues()) {
+                if (this.invertedValues.contains(required)) {
+                    return false;
+                }
+            }
+            for (String variant : parsedConfig.variants()) {
+                // If a variant is required or inverted, check if the test values allow that
+                if (this.requiredValues.contains(variant)) {
+                    if (isVariantConfigInvalid(generator.getGameTestConfig(), variant, true)) {
                         return false;
+                    }
+                } else if (this.invertedValues.contains(variant)) {
+                    if (isVariantConfigInvalid(generator.getGameTestConfig(), variant, false)) {
+                        return false;
+                    }
+                } else if (this.variants.contains(variant)) {
+                    // Compare config's
+                    for (TestFunctionGenerator gen : testFunctionGenerators) {
+                        if (areVariantConfigsIncompatible(gen.getGameTestConfig(), parsedConfig, variant)) {
+                            return false;
+                        }
                     }
                 }
             }
             return true;
         }
+    }
+
+    private static boolean isVariantConfigInvalid(ParsedGameTestConfig parsedConfig,
+                                                  String variant, boolean required) {
+        for (Config config : parsedConfig.config()) {
+            for (String name : config.name()) {
+                if (name.equals(variant)) {
+                    if (config.testValues().length != 1) { // Needs to be a single value
+                        return true;
+                    }
+                    if (!config.testValues()[0].equals(required ? "true" : "false")) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean areVariantConfigsIncompatible(ParsedGameTestConfig parsedConfig1,
+                                                         ParsedGameTestConfig parsedConfig2, String variant) {
+        // Check if the same test values are used
+        return !Sets.difference(
+                getTestValues(parsedConfig1, variant),
+                getTestValues(parsedConfig2, variant)
+        ).isEmpty();
+    }
+
+    private static Set<String> getTestValues(ParsedGameTestConfig parsedConfig, String variant) {
+        Set<String> testValues = new HashSet<>();
+        for (Config config : parsedConfig.config()) {
+            for (String name : config.name()) {
+                if (name.equals(variant)) { // This config contains the variant
+                    testValues.addAll(List.of(config.testValues())); // Add test values
+                }
+            }
+        }
+        return testValues;
     }
 
     @Builder
