@@ -63,7 +63,7 @@ public class BlockStateSuggestions extends CommandSuggestions {
             this.suggestions = null;
         }
         this.commandUsage.clear();
-        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
         SuggestionsBuilder suggestionsBuilder = new SuggestionsBuilder(string, 0);
         this.pendingSuggestions = BlockStateParser.fillSuggestions(holderLookup, suggestionsBuilder, false, true);
         this.showSuggestions(true);

@@ -39,7 +39,7 @@ public class CheckStateScreen extends Screen {
 
     private void onDone() {
         Direction newDirection = this.blockEntity.getDirection();
-        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
         try {
             String stateValue = this.stateEdit.getValue();
             BlockState state = BlockStateParser.parseForBlock(holderLookup, stateValue, true).blockState();

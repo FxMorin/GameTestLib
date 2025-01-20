@@ -82,7 +82,7 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public VoxelShape getOcclusionShape(BlockState blockState) {
         return Shapes.empty();
     }
 
@@ -156,7 +156,7 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
                         entity.isAlive() && !(entity instanceof LivingEntity)
                 );
             };
-            if (list.size() != 0) { // There is an entity touching the area
+            if (!list.isEmpty()) { // There's an entity touching the area
                 if (this.flip) {
                     helper.fail("Entity Inside at " + this.blockPos.toShortString());
                     return false;

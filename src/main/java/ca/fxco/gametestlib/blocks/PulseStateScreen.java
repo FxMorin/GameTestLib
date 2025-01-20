@@ -47,7 +47,7 @@ public class PulseStateScreen extends Screen {
     }
 
     private void onDone() {
-        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
         try {
             ServerboundSetPulseStatePacket packet = new ServerboundSetPulseStatePacket(
                     this.blockEntity.getBlockPos(),

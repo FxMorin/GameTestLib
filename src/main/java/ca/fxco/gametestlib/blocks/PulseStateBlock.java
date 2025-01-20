@@ -42,9 +42,9 @@ public class PulseStateBlock extends BaseEntityBlock implements GameMasterBlock,
         if (blockEntity instanceof PulseStateBlockEntity pulseStateBlockEntity) {
             if (level.isClientSide) {
                 return pulseStateBlockEntity.usedBy(player) ?
-                        InteractionResult.sidedSuccess(true) : InteractionResult.PASS;
+                        InteractionResult.SUCCESS : InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(false);
+            return InteractionResult.SUCCESS_SERVER;
         }
         return InteractionResult.PASS;
     }

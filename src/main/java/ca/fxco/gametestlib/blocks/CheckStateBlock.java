@@ -44,9 +44,9 @@ public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock,
         if (blockEntity instanceof CheckStateBlockEntity checkStateBlockEntity) {
             if (level.isClientSide) {
                 return checkStateBlockEntity.usedBy(player) ?
-                        InteractionResult.sidedSuccess(true) : InteractionResult.PASS;
+                        InteractionResult.SUCCESS : InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(false);
+            return InteractionResult.SUCCESS_SERVER;
         }
         return InteractionResult.PASS;
     }

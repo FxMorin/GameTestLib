@@ -74,7 +74,7 @@ public class PulseStateBlockEntity extends BlockEntity {
         this.delay = compoundTag.getInt("delay");
         this.duration = compoundTag.getInt("duration");
         this.disableFirstBlockUpdates = compoundTag.contains("firstBlockUpdate");
-        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
         if (compoundTag.contains("firstBS")) {
             this.firstBlockState = NbtUtils.readBlockState(holderLookup, compoundTag.getCompound("firstBS"));
         }

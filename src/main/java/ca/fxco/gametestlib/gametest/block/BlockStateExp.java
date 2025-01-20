@@ -36,14 +36,14 @@ public abstract class BlockStateExp {
     public static BlockStateExp read(CompoundTag compoundTag) {
         if (compoundTag.contains("state")) {
             if (compoundTag.getBoolean("state")) { // blockstate
-                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
                 BlockState state = NbtUtils.readBlockState(holderLookup, compoundTag);
                 return BlockStateExp.of(state);
             } else { // block
                 if (!compoundTag.contains("Name", 8)) {
                     return EMPTY;
                 }
-                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
                 ResourceLocation resourceLocation = ResourceLocation.parse(compoundTag.getString("Name"));
                 Optional<? extends Holder<Block>> optional = holderLookup.get(ResourceKey.create(Registries.BLOCK, resourceLocation));
                 if (optional.isEmpty()) {
