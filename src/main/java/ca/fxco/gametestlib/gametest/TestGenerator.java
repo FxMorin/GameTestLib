@@ -355,6 +355,9 @@ public class TestGenerator {
                     this.name = null;
                 }
             }
+            if (this.name == null) {
+                this.name = generator.getGameTestDataBuilder().batch$value;
+            }
         }
 
         public boolean canAcceptGenerator(TestFunctionGenerator generator) {
