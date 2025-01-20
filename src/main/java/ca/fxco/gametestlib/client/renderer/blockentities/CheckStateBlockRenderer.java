@@ -27,19 +27,18 @@ public class CheckStateBlockRenderer<T extends CheckStateBlockEntity> implements
                        MultiBufferSource multiBufferSource, int light, int j) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player.canUseGameMasterBlocks() || minecraft.player.isSpectator()) {
-            // TODO: Use new full face debug block renderer in 1.20
             poseStack.pushPose();
             Direction direction = blockEntity.getDirection();
             poseStack.translate(direction.getStepX(),direction.getStepY(),direction.getStepZ());
-            poseStack.translate(-0.005F,-0.005F,-0.005F);
-            poseStack.scale(1.01F, 1.01F, 1.01F);
+            poseStack.translate(-0.05F,-0.05F,-0.05F);
+            poseStack.scale(1.1F, 1.1F, 1.1F);
             BlockPos sidePos = blockEntity.getBlockPos().relative(direction);
             BlockState state = blockEntity.getLevel().getBlockState(blockEntity.getBlockPos().relative(direction));
             int color = blockEntity.getBlockStateExp().matches(state) ?
                     (blockEntity.isFailOnFound() ? RED : GREEN) :
                     GRAY;
             DebugRenderer.renderFilledUnitCube(poseStack, multiBufferSource, sidePos,
-                    ARGB.alpha(color), ARGB.red(color), ARGB.green(color), ARGB.blue(color));
+                    ARGB.redFloat(color), ARGB.greenFloat(color), ARGB.blueFloat(color), ARGB.alphaFloat(color));
             poseStack.popPose();
             int tick = blockEntity.getTick();
             if (tick != -1) {
