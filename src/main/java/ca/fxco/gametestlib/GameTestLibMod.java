@@ -48,6 +48,7 @@ public class GameTestLibMod implements ModInitializer {
 
             ServerLifecycleEvents.SERVER_STARTED.register(server -> {
                 CURRENT_SERVER = server;
+                CONFIG_MANAGER.resetAllValues();
             });
 
             GameTestBlocks.boostrap();

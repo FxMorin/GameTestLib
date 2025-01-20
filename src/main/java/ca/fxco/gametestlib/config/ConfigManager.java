@@ -33,4 +33,10 @@ public class ConfigManager {
         return Optional.empty();
     }
 
+    /**
+     * Resets all values to their default value
+     */
+    public void resetAllValues() {
+        this.values.forEach((s, v) -> v.setDefault());
+    }
 }
