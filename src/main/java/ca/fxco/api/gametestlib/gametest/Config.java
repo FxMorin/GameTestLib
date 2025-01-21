@@ -1,27 +1,35 @@
 package ca.fxco.api.gametestlib.gametest;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * An annotation used within {@link GameTestLib}, which is used to specify
+ * different configurations for variant config fields used.
+ *
+ * @see GameTestLib
+ * @author FX
+ */
+@Target({})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
 
     /**
-     * The string value of the option what should be matched
+     * Array of variant ids that this config should affect.
+     * Variant id's must have been defined in the variants.
      */
-    String[] value();
+    String[] name() default {};
 
     /**
-     * Strings must be a valid config field names
+     * Array of string values to test.
+     * If left empty, all the default test values are used.
      */
-    String[] optionName() default {};
+    String[] testValues() default {};
 
     /**
-     * Allows you to set this value as ignored.
-     * If the Config is ignored, this will make the value required
+     * Array of changes that need to be applied for each value.
+     * Specifies what should change for these values.
      */
-    // TODO: Implement a way to ignore specific values
-    //  not absolutly needed at the moment since only one rule can run at a time
-    //boolean invertRequire() default false;
-
-    /**
-     * Specify what should change about the test when these config values are used.
-     */
-    GameTestChanges changes() default GameTestChanges.NONE;
+    Change[] changes() default {};
 }
