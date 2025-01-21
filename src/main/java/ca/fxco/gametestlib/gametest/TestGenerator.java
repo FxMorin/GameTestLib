@@ -362,6 +362,9 @@ public class TestGenerator {
 
         public boolean canAcceptGenerator(TestFunctionGenerator generator) {
             var parsedConfig = generator.getGameTestConfig();
+            if (!parsedConfig.variants().equals(this.variants)) {
+                return false;
+            }
             for (String inverted : parsedConfig.invertedValues()) {
                 if (this.requiredValues.contains(inverted)) {
                     return false;
