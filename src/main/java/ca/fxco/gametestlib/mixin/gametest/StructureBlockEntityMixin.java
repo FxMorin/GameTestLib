@@ -1,6 +1,7 @@
 package ca.fxco.gametestlib.mixin.gametest;
 
 import ca.fxco.gametestlib.GameTestLibMod;
+import ca.fxco.gametestlib.Utils.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +23,8 @@ import java.util.Optional;
 public abstract class StructureBlockEntityMixin extends BlockEntity {
 
     @Shadow @Nullable protected abstract StructureTemplate getStructureTemplate(ServerLevel serverLevel);
+
+    @Shadow private @Nullable ResourceLocation structureName;
 
     public StructureBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -50,4 +53,29 @@ public abstract class StructureBlockEntityMixin extends BlockEntity {
         }
         return instance.get(resourceLocation);
     }
+
+    @Redirect(
+            method = {
+                    "getStructureTemplate",
+                    "placeStructureIfSameSize",
+            },
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;" +
+                            "get(Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional;"
+            )
+    )
+    private Optional<StructureTemplate> getFromTestStructures2(StructureTemplateManager instance,
+                                                              ResourceLocation resourceLocation) {
+        if (GameTestLibMod.GAMETEST_ACTIVE && this.getLevel() instanceof ServerLevel serverLevel) {
+            try {
+                return Optional.of(Utils.getStructureTemplate(structureName.getPath(), serverLevel));
+            } catch (RuntimeException re) {
+                re.printStackTrace();
+            }
+            return Optional.empty();
+        }
+        return instance.get(resourceLocation);
+    }
+
 }
