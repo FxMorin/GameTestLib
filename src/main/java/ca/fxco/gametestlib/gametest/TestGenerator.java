@@ -258,8 +258,10 @@ public class TestGenerator {
                 gameTestData.timeoutTicks,
                 gameTestData.setupTicks,
                 gameTestData.required,
+                gameTestData.manualOnly,
                 gameTestData.requiredSuccesses,
                 gameTestData.attempts,
+                gameTestData.skyAccess,
                 consumer
         );
     }
@@ -271,7 +273,9 @@ public class TestGenerator {
         String string4 = gameTestData.template.isEmpty() ? string3 : string2 + "." + gameTestData.template;
         String string5 = gameTestData.batch;
         Rotation rotation = StructureUtils.getRotationForRotationSteps(gameTestData.rotationSteps);
-        return new TestFunction(string5, string3, string4, rotation, gameTestData.timeoutTicks, gameTestData.setupTicks, gameTestData.required, gameTestData.requiredSuccesses, gameTestData.attempts, turnMethodIntoConsumer(method));
+        return new TestFunction(string5, string3, string4, rotation, gameTestData.timeoutTicks, gameTestData.setupTicks,
+                gameTestData.required, gameTestData.manualOnly, gameTestData.requiredSuccesses, gameTestData.attempts,
+                gameTestData.skyAccess, turnMethodIntoConsumer(method));
     }
 
     private static Consumer<GameTestHelper> turnMethodIntoConsumer(Method method) {
@@ -446,15 +450,17 @@ public class TestGenerator {
         @Builder.Default private String batch = "defaultBatch";
         @Builder.Default private int rotationSteps = 0;
         @Builder.Default private boolean required = true;
+        @Builder.Default private boolean manualOnly = false;
         @Builder.Default private String template = "";
         @Builder.Default private long setupTicks = 0L;
         @Builder.Default private int attempts = 1;
+        @Builder.Default private boolean skyAccess = false;
         @Builder.Default private int requiredSuccesses = 1;
 
         public static GameTestData from(GameTest gameTest) {
             return new GameTestData(gameTest.timeoutTicks(), gameTest.batch(), gameTest.rotationSteps(),
-                    gameTest.required(), gameTest.template(), gameTest.setupTicks(),
-                    gameTest.attempts(), gameTest.requiredSuccesses());
+                    gameTest.required(), gameTest.manualOnly(), gameTest.template(), gameTest.setupTicks(),
+                    gameTest.attempts(), gameTest.skyAccess(), gameTest.requiredSuccesses());
         }
 
         public static GameTestData.GameTestDataBuilder builderFrom(GameTest gameTest) {
@@ -463,9 +469,11 @@ public class TestGenerator {
                     .batch(gameTest.batch())
                     .rotationSteps(gameTest.rotationSteps())
                     .required(gameTest.required())
+                    .manualOnly(gameTest.manualOnly())
                     .template(gameTest.template())
                     .setupTicks(gameTest.setupTicks())
                     .attempts(gameTest.attempts())
+                    .skyAccess(gameTest.skyAccess())
                     .requiredSuccesses(gameTest.requiredSuccesses());
         }
     }

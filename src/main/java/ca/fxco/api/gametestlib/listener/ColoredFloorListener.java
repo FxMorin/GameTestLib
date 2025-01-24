@@ -3,6 +3,7 @@ package ca.fxco.api.gametestlib.listener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.gametest.framework.GameTestListener;
+import net.minecraft.gametest.framework.GameTestRunner;
 import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,13 +21,18 @@ public class ColoredFloorListener implements GameTestListener {
     }
 
     @Override
-    public void testPassed(GameTestInfo gameTestInfo) {
+    public void testPassed(GameTestInfo gameTestInfo, GameTestRunner runner) {
         fillFloor(gameTestInfo, Blocks.LIME_CONCRETE.defaultBlockState());
     }
 
     @Override
-    public void testFailed(GameTestInfo gameTestInfo) {
+    public void testFailed(GameTestInfo gameTestInfo, GameTestRunner runner) {
         fillFloor(gameTestInfo, Blocks.RED_CONCRETE.defaultBlockState());
+    }
+
+    @Override
+    public void testAddedForRerun(GameTestInfo gameTestInfo, GameTestInfo gameTestInfo2, GameTestRunner gameTestRunner) {
+        gameTestInfo2.addListener(this);
     }
 
     public void fillFloor(GameTestInfo gameTestInfo, BlockState state) {

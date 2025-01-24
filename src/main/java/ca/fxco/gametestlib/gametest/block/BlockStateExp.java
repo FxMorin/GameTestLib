@@ -1,5 +1,6 @@
 package ca.fxco.gametestlib.gametest.block;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -7,6 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +22,9 @@ import java.util.Optional;
 // BlockState Expression
 public abstract class BlockStateExp {
 
+    public static final StreamCodec<ByteBuf, BlockStateExp> STREAM_CODEC = ByteBufCodecs.COMPOUND_TAG
+            .map(BlockStateExp::read, BlockStateExp::write);
+
     public static final BlockStateExp EMPTY = BlockStateExp.of(Blocks.AIR);
 
     public abstract boolean matches(BlockState state);
@@ -30,15 +36,15 @@ public abstract class BlockStateExp {
     public static BlockStateExp read(CompoundTag compoundTag) {
         if (compoundTag.contains("state")) {
             if (compoundTag.getBoolean("state")) { // blockstate
-                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
                 BlockState state = NbtUtils.readBlockState(holderLookup, compoundTag);
                 return BlockStateExp.of(state);
             } else { // block
                 if (!compoundTag.contains("Name", 8)) {
                     return EMPTY;
                 }
-                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
-                ResourceLocation resourceLocation = new ResourceLocation(compoundTag.getString("Name"));
+                HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
+                ResourceLocation resourceLocation = ResourceLocation.parse(compoundTag.getString("Name"));
                 Optional<? extends Holder<Block>> optional = holderLookup.get(ResourceKey.create(Registries.BLOCK, resourceLocation));
                 if (optional.isEmpty()) {
                     return EMPTY;

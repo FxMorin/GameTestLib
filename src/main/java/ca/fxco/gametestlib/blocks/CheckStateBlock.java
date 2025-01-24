@@ -3,6 +3,7 @@ package ca.fxco.gametestlib.blocks;
 import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import com.mojang.serialization.MapCodec;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -15,14 +16,20 @@ import net.minecraft.world.level.block.GameMasterBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
+    public static final MapCodec<CheckStateBlock> CODEC = simpleCodec(CheckStateBlock::new);
+
     public CheckStateBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -31,14 +38,15 @@ public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock,
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos,
+                                               Player player, BlockHitResult blockHitResult) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof CheckStateBlockEntity checkStateBlockEntity) {
             if (level.isClientSide) {
                 return checkStateBlockEntity.usedBy(player) ?
-                        InteractionResult.sidedSuccess(true) : InteractionResult.PASS;
+                        InteractionResult.SUCCESS : InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(false);
+            return InteractionResult.SUCCESS_SERVER;
         }
         return InteractionResult.PASS;
     }
@@ -46,11 +54,6 @@ public class CheckStateBlock extends BaseEntityBlock implements GameMasterBlock,
     @Override
     public RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
     }
 
     //

@@ -6,7 +6,6 @@ import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -16,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,16 +30,16 @@ public class TestTriggerBlock extends Block implements GameMasterBlock, GameTest
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos,
-                                Block block, BlockPos blockPos2, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block,
+                                @Nullable Orientation orientation, boolean bl) {
         if (!blockState.getValue(POWERED) && level.hasNeighborSignal(blockPos)) {
             level.setBlock(blockPos, blockState.setValue(POWERED, true), Block.UPDATE_INVISIBLE);
         }
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
-                                 InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos,
+                                               Player player, BlockHitResult blockHitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -54,11 +53,6 @@ public class TestTriggerBlock extends Block implements GameMasterBlock, GameTest
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(INVERTED, POWERED);
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
     }
 
     //

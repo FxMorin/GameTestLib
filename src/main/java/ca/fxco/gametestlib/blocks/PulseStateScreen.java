@@ -1,11 +1,10 @@
 package ca.fxco.gametestlib.blocks;
 
-import ca.fxco.gametestlib.Utils.EventCheckbox;
 import ca.fxco.gametestlib.gametest.block.BlockStateSuggestions;
 import ca.fxco.gametestlib.network.GameTestNetwork;
 import ca.fxco.gametestlib.network.packets.ServerboundSetPulseStatePacket;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
@@ -37,15 +36,6 @@ public class PulseStateScreen extends Screen {
         this.blockEntity = blockEntity;
     }
 
-    @Override
-    public void tick() {
-        this.pulseDelayEdit.tick();
-        this.pulseDurationEdit.tick();
-        this.firstStateEdit.tick();
-        this.pulseStateEdit.tick();
-        this.lastStateEdit.tick();
-    }
-
     public void onCancel() {
         this.blockEntity.setDisableFirstBlockUpdates(initialDisableFirstBlockUpdates);
         this.minecraft.setScreen(null);
@@ -57,7 +47,7 @@ public class PulseStateScreen extends Screen {
     }
 
     private void onDone() {
-        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK.asLookup();
+        HolderLookup<Block> holderLookup = BuiltInRegistries.BLOCK;
         try {
             ServerboundSetPulseStatePacket packet = new ServerboundSetPulseStatePacket(
                     this.blockEntity.getBlockPos(),
@@ -106,7 +96,10 @@ public class PulseStateScreen extends Screen {
         this.lastStateEdit.setValue(BlockStateParser.serialize(this.blockEntity.getLastBlockState()));
         this.addWidget(this.lastStateEdit);
 
-        this.disableFirstBlockUpdates = new EventCheckbox(this.width / 2 + 134, 90, 20, 20, Component.empty(), this.blockEntity.isDisableFirstBlockUpdates(), this.blockEntity::setDisableFirstBlockUpdates);
+        this.disableFirstBlockUpdates = Checkbox.builder(Component.empty(), minecraft.font).pos(this.width / 2 + 134, 90)
+                .selected(this.blockEntity.isDisableFirstBlockUpdates())
+                .onValueChange((checkbox, value) -> this.blockEntity.setDisableFirstBlockUpdates(value))
+                .build();
         this.addWidget(this.disableFirstBlockUpdates);
 
         this.setInitialFocus(this.pulseDelayEdit);
@@ -144,9 +137,9 @@ public class PulseStateScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
+    public boolean mouseScrolled(double d, double e, double f, double g) {
         return this.blockStateSuggestionsFirst.mouseScrolled(f) || this.blockStateSuggestionsPulse.mouseScrolled(f) ||
-                this.blockStateSuggestionsLast.mouseScrolled(f) || super.mouseScrolled(d, e, f);
+                this.blockStateSuggestionsLast.mouseScrolled(f) || super.mouseScrolled(d, e, f, g);
     }
 
     @Override
@@ -158,26 +151,25 @@ public class PulseStateScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        super.render(guiGraphics, i, j, f);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
 
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
-        this.pulseDelayEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
-        this.pulseDurationEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
-        this.firstStateEdit.render(poseStack, i, j, f);
-        drawString(poseStack, this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
-        this.pulseStateEdit.render(poseStack, i, j, f);
-        this.lastStateEdit.render(poseStack, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.delay"), this.width / 2 - 153, 40, 10526880);
+        this.pulseDelayEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.duration"), this.width / 2 + 4, 40, 10526880);
+        this.pulseDurationEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.firstState"), this.width / 2 - 153, 80, 10526880);
+        this.firstStateEdit.render(guiGraphics, i, j, f);
+        guiGraphics.drawString(this.font, Component.translatable("screen.gametestlib.pulse_state_block.pulseState"), this.width / 2 - 153, 120, 10526880);
+        this.pulseStateEdit.render(guiGraphics, i, j, f);
+        this.lastStateEdit.render(guiGraphics, i, j, f);
         Component comp = Component.translatable("screen.gametestlib.pulse_state_block.disableUpdate");
-        drawString(poseStack, this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
-        this.disableFirstBlockUpdates.render(poseStack, i, j, f);
+        guiGraphics.drawString(this.font, comp, (this.width / 2 + 153) - this.font.width(comp), 80, 10526880);
+        this.disableFirstBlockUpdates.render(guiGraphics, i, j, f);
 
-        super.render(poseStack, i, j, f);
-        this.blockStateSuggestionsFirst.render(poseStack, i, j);
-        this.blockStateSuggestionsPulse.render(poseStack, i, j);
-        this.blockStateSuggestionsLast.render(poseStack, i, j);
+        this.blockStateSuggestionsFirst.render(guiGraphics, i, j);
+        this.blockStateSuggestionsPulse.render(guiGraphics, i, j);
+        this.blockStateSuggestionsLast.render(guiGraphics, i, j);
     }
 }

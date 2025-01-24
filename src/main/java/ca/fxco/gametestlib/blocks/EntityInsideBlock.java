@@ -5,6 +5,7 @@ import ca.fxco.gametestlib.gametest.GameTestUtil;
 import ca.fxco.api.gametestlib.gametest.GameTestActionBlock;
 import ca.fxco.api.gametestlib.gametest.GameTestChanges;
 import ca.fxco.gametestlib.gametest.expansion.GameTestGroupConditions;
+import com.mojang.serialization.MapCodec;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,8 @@ import java.util.List;
 
 public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBlock, GameTestActionBlock {
 
+    public static final MapCodec<EntityInsideBlock> CODEC = simpleCodec(EntityInsideBlock::new);
+
     public static final EntityTypeTest<Entity, ?> ANY_TYPE = new EntityTypeTest<>() {
         public Entity tryCast(Entity entity) {
             return entity;
@@ -62,6 +65,11 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
         );
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -74,13 +82,13 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    public VoxelShape getOcclusionShape(BlockState blockState) {
         return Shapes.empty();
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player,
-                                 InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos,
+                                               Player player, BlockHitResult blockHitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -97,11 +105,6 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(DELAY, TYPE);
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.BLOCK;
     }
 
     //
@@ -153,7 +156,7 @@ public class EntityInsideBlock extends BaseEntityBlock implements GameMasterBloc
                         entity.isAlive() && !(entity instanceof LivingEntity)
                 );
             };
-            if (list.size() != 0) { // There is an entity touching the area
+            if (!list.isEmpty()) { // There's an entity touching the area
                 if (this.flip) {
                     helper.fail("Entity Inside at " + this.blockPos.toShortString());
                     return false;

@@ -8,7 +8,8 @@
     "gametest.GameTestServerAccessor",
     "gametest.GameTestServerMixin",
     "gametest.MultipleTestTrackerMixin",
-    "gametest.StructureBlockEntityMixin"
+    "gametest.StructureBlockEntityMixin",
+    "gametest.StructureUtilsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

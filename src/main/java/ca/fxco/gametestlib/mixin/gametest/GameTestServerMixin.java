@@ -5,6 +5,7 @@ import ca.fxco.gametestlib.gametest.expansion.GameTestPlayerList;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.GameProfileRepository;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.yggdrasil.ServicesKeySet;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.core.BlockPos;
@@ -96,12 +97,12 @@ public abstract class GameTestServerMixin extends MinecraftServer {
             )
     )
     private static Services useNormalServices(MinecraftSessionService minecraftSessionService,
-                                              SignatureValidator signatureValidator,
+                                              ServicesKeySet servicesKeySet,
                                               GameProfileRepository gameProfileRepository,
                                               GameProfileCache gameProfileCache) {
         return GameTestLibMod.KEEPALIVE_ACTIVE ?
                 Services.create(new YggdrasilAuthenticationService(Proxy.NO_PROXY), new File(".")) :
-                new Services(null, SignatureValidator.NO_VALIDATION, null, null);
+                new Services(null, ServicesKeySet.EMPTY, null, null);
     }
 
     @Inject(
